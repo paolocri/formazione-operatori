@@ -22,3 +22,9 @@ Questa cartella contiene l'app pronta per essere messa online come web app insta
 ## Aggiornarla
 Sostituisci `index.html` e cambia `VERSIONE` in `sw.js` (es. `formazione-v2`).
 L'avanzamento dei corsi resta salvato su ogni telefono.
+
+## Privacy
+- Il sito contiene solo informazioni pubbliche e non usa cookie, statistiche o servizi esterni: i caratteri sono ospitati qui (cartella `fonts/`), non su Google.
+- L'area operatore "Passaggi" salva i dati **solo sul telefono** di chi la usa, cifrati (AES-GCM 256) con una chiave ricavata dal PIN (PBKDF2, 310.000 iterazioni). Nessun dato viene inviato a server.
+- Dopo 5 PIN sbagliati i passaggi vengono cancellati; quelli già inseriti in Matrioska si cancellano dopo 7 giorni.
+- Non vanno inseriti nomi, cognomi né dati sulla salute: solo codice Matrioska o iniziali.

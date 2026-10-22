@@ -1,6 +1,6 @@
 // Cambia la versione a ogni aggiornamento dell'app, così i telefoni scaricano i file nuovi
-const VERSIONE = "formazione-v6";
-const FILE = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
+const VERSIONE = "formazione-v7";
+const FILE = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "fonts/fonts.css", "fonts/titillium-web-latin-600-normal.woff2", "fonts/titillium-web-latin-700-normal.woff2", "fonts/source-sans-3-latin-400-normal.woff2"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSIONE).then(c => c.addAll(FILE)).then(() => self.skipWaiting()));
@@ -19,11 +19,5 @@ self.addEventListener("fetch", e => {
       const copia = r.clone(); caches.open(VERSIONE).then(c => c.put(e.request, copia)); return r;
     }).catch(() => caches.match(e.request).then(r => r || caches.match("index.html"))));
     return;
-  }
-  // Caratteri di Google Fonts: copia salvata, così l'app resta bella anche offline
-  if (url.host.endsWith("fonts.googleapis.com") || url.host.endsWith("fonts.gstatic.com")) {
-    e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(res => {
-      const copia = res.clone(); caches.open(VERSIONE).then(c => c.put(e.request, copia)); return res;
-    })));
   }
 });

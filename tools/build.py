@@ -5,6 +5,10 @@ src = open(os.path.join(here, '../app-formazione/index.html')).read()
 title_end = src.index('</title>') + len('</title>')
 body_start = src.index('<header class="topbar">')
 headpart = src[title_end:body_start].replace('<meta name="claude:viewport-fit-sides" content="cover">', '')
+# Caratteri dal nostro sito invece che da Google Fonts (privacy: niente IP inviato a Google)
+headpart = re.sub(r'<link rel="preconnect"[^>]*>\n?', '', headpart)
+headpart = re.sub(r'<link rel="stylesheet" href="https://fonts.googleapis.com[^>]*>', '<link rel="stylesheet" href="fonts/fonts.css">', headpart)
+assert 'googleapis' not in headpart and 'gstatic' not in headpart
 body = src[body_start:].replace('render();\n</script>', '''render();
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));
 </script>''')
