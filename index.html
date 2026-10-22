@@ -113,6 +113,30 @@ nav.tabs button{font:inherit;font-family:var(--display);font-size:.78rem;font-we
 nav.tabs button[aria-current="true"]{color:var(--red);border-top-color:var(--red)}
 nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
 .note{font-size:.85rem;color:var(--muted)}
+.area{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:center;border-color:var(--red)}
+.area > div{display:grid;gap:2px;min-width:0}
+.campo{display:grid;gap:4px;font-weight:600}
+.campo small,.chips legend{font-weight:400;color:var(--muted);font-size:.82rem}
+.campo input,.campo select,.campo textarea,.pin,.copia-testo{font:inherit;font-weight:400;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%;box-sizing:border-box}
+.pin{font-size:1.6rem;letter-spacing:.5em;text-align:center;font-family:var(--display)}
+.copia-testo{min-height:120px;font-size:.85rem}
+.check{display:flex;gap:8px;align-items:center}
+.check input,.chips input{accent-color:var(--red)}
+.chips{border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
+.chips legend{padding:0;margin-bottom:6px;font-weight:600;color:var(--ink);font-size:1rem}
+.chips label{position:relative}
+.chips input{position:absolute;opacity:0;inset:0}
+.chips span{display:inline-block;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:.9rem;cursor:pointer}
+.chips input:checked + span{background:var(--red);border-color:var(--red);color:#fff}
+.chips input:focus-visible + span{outline:3px solid var(--red);outline-offset:2px}
+.pill{display:inline-block;font-size:.78rem;padding:2px 8px;border-radius:999px;background:var(--red-soft);color:var(--red);margin:2px 0}
+.passaggio.fatto{opacity:.7}
+.btn.piccolo{padding:8px 14px;font-size:.88rem}
+.errore{color:var(--red);font-weight:600;min-height:1.2em}
+details summary{cursor:pointer;font-weight:600;color:var(--muted)}
+.avviso{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:600;transition:opacity .2s,transform .2s;z-index:20;pointer-events:none;max-width:calc(100% - 32px)}
+.avviso.on{opacity:1;transform:translate(-50%,0)}
+
 .sede{gap:10px}
 .contatti{display:grid;gap:8px}
 .contatti>div,.info{display:grid;gap:1px}
@@ -360,7 +384,7 @@ function apertiOggi(){
 let vista = { tab:"home" };
 const scrollSchede = {};
 const RIDOTTO = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const profondita = v => v.servizio ? 1 : 0;
+const profondita = v => (v.servizio || v.area) ? 1 : 0;
 
 function vai(v, { storia = true } = {}){
   const indietro = profondita(v) < profondita(vista);
@@ -381,9 +405,10 @@ function vai(v, { storia = true } = {}){
 addEventListener("popstate", e => vai(e.state || { tab:"home" }, { storia:false }));
 
 function render(){
-  document.getElementById("band").hidden = vista.tab!=="home";
+  document.getElementById("band").hidden = vista.tab!=="home" || !!vista.area;
   document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-current", b.dataset.tab===vista.tab));
   if (vista.servizio) return renderServizio();
+  if (vista.area) return renderPassaggi();
   ({home:renderHome, servizi:renderServizi, notizie:renderNotizie, materiali:()=>renderLista("materiali"), documenti:()=>renderLista("documenti")})[vista.tab]();
 }
 
@@ -405,6 +430,8 @@ function renderHome(){
         <div><span>Email</span>${mailLink(SEDE.email)}</div>
       </div>
     </section>
+    <button class="card area" id="area"><span class="ico"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
+      <div><span class="eyebrow">Area operatore</span><h3>Segna un passaggio</h3><p class="muted">${(()=>{const n=leggi(CHIAVE_P,[]).filter(p=>!p.inserito).length;return n?`${n} da inserire in Matrioska`:"Annotalo ora, inseriscilo in Matrioska dopo";})()}</p></div></button>
     <section class="stack">
       <div class="stack" style="gap:4px"><span class="eyebrow">Oggi, ${oggi}</span><h2>Aperti oggi</h2></div>
       ${aperti.length ? aperti.map(cardAperto).join("") : `<div class="card"><p class="muted">Oggi non ci sono Centri di Ascolto né l'Emporio aperti. Il Centro di Ascolto cittadino risponde al ${telLink("351 843 3143")} dal lunedì al venerdì, 9:00-12:30.</p></div>`}
@@ -416,6 +443,7 @@ function renderHome(){
     <section class="stack"><h2>Numeri utili</h2><div class="phones">${NUMERI.map(x=>`<div class="card"><span class="phone">${x.n}</span><p class="muted">${esc(x.t)}</p></div>`).join("")}</div></section>`;
   collegaServizi();
   document.getElementById("tutti").onclick = () => vai({tab:"servizi"});
+  document.getElementById("area").onclick = () => vai({tab:"home", area:"passaggi"});
   document.getElementById("tutte").onclick = () => vai({tab:"notizie"});
   document.getElementById("cerca").oninput = e => cerca(e.target.value.trim().toLowerCase());
   mostraNotizie();
@@ -468,6 +496,146 @@ function renderCentri(){
       <div class="row"><h3>${esc(c.nome)}</h3>${ap?'<span class="tag ok">Oggi</span>':""}</div>
       <p class="muted">${esc(c.indirizzo)}</p><p><b>${esc(c.orario)}</b></p>
       ${c.tel?`<p>${telLink(c.tel)}${c.telNota?` <span class="muted">(${esc(c.telNota)})</span>`:""}</p>`:""}</div>`; }).join("")}</section>`;
+}
+
+
+// Area operatore: passaggi annotati al volo, da riportare poi in Matrioska.
+// I dati restano SOLO su questo telefono (localStorage). Il PIN impedisce l'accesso casuale, non cifra i dati.
+const INTERVENTI = ["Ascolto","Emporio / viveri","Vestiario","Orientamento ai servizi","Utenze / affitto","Farmaci / salute","Lavoro","Altro"];
+const CHIAVE_P = "passaggi-v1", CHIAVE_PIN = "passaggi-pin", CHIAVE_CENTRO = "passaggi-centro";
+const leggi = (k, d) => { try { const v = localStorage.getItem(k); return v==null ? d : JSON.parse(v); } catch(e){ return d; } };
+const scrivi = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(e){ return false; } };
+let sbloccato = false, ultimoUso = 0;
+const BLOCCO_MS = 10*60*1000;
+
+function caricaPassaggi(){
+  // I passaggi già inseriti in Matrioska si cancellano da soli dopo 30 giorni
+  const limite = Date.now() - 30*24*3600*1000;
+  const lista = leggi(CHIAVE_P, []).filter(p => !p.inserito || p.inseritoIl > limite);
+  scrivi(CHIAVE_P, lista);
+  return lista;
+}
+const hashPin = async pin => {
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("operatori-caritas:" + pin));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2,"0")).join("");
+};
+
+function avviso(t){
+  let el = document.getElementById("avviso");
+  if (!el){ el = document.createElement("div"); el.id = "avviso"; el.className = "avviso"; el.setAttribute("role","status"); document.body.appendChild(el); }
+  el.textContent = t; el.classList.add("on");
+  clearTimeout(avviso.t); avviso.t = setTimeout(() => el.classList.remove("on"), 2200);
+}
+
+function renderPassaggi(){
+  if (sbloccato && Date.now() - ultimoUso > BLOCCO_MS) sbloccato = false;
+  if (!sbloccato) return renderPin();
+  ultimoUso = Date.now();
+  const lista = caricaPassaggi();
+  const daInserire = lista.filter(p => !p.inserito).sort((a,b) => a.quando.localeCompare(b.quando));
+  const inseriti = lista.filter(p => p.inserito).sort((a,b) => b.quando.localeCompare(a.quando));
+  const centroDefault = leggi(CHIAVE_CENTRO, CENTRI[0].nome);
+  const ora = new Date(Date.now() - new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);
+  app.innerHTML = `<button class="back" id="indietro">‹ Indietro</button>
+    <div class="stack"><span class="eyebrow">Area operatore</span><h1>Passaggi</h1>
+      <p class="muted">Annota il passaggio adesso, riportalo in Matrioska quando hai tempo.</p></div>
+    <form class="card stack" id="form-p" autocomplete="off">
+      <h2>Nuovo passaggio</h2>
+      <label class="campo">Quando<input type="datetime-local" id="p-quando" value="${ora}" required></label>
+      <label class="campo">Centro di Ascolto<select id="p-centro">${CENTRI.map(c=>`<option ${c.nome===centroDefault?"selected":""}>${esc(c.nome)}</option>`).join("")}</select></label>
+      <label class="campo">Persona<input id="p-codice" maxlength="20" placeholder="Codice Matrioska o iniziali" required>
+        <small>Non scrivere nome e cognome: bastano il codice della scheda o le iniziali.</small></label>
+      <label class="check"><input type="checkbox" id="p-nuovo"> Primo accesso (scheda da aprire in Matrioska)</label>
+      <fieldset class="chips"><legend>Interventi</legend>${INTERVENTI.map((t,i)=>`<label><input type="checkbox" value="${esc(t)}" ${i===0?"checked":""}><span>${esc(t)}</span></label>`).join("")}</fieldset>
+      <label class="campo">Note brevi<textarea id="p-note" maxlength="200" rows="2" placeholder="Es. consegnata tessera Emporio, rivedere tra 15 giorni"></textarea>
+        <small>Evita dati sanitari o dettagli personali non necessari.</small></label>
+      <button class="btn" type="submit">Salva passaggio</button>
+    </form>
+    <section class="stack">
+      <div class="row"><h2>Da inserire in Matrioska <span class="tag num">${daInserire.length}</span></h2>
+        ${daInserire.length?'<button class="back" id="copia">Copia riepilogo</button>':""}</div>
+      ${daInserire.length ? daInserire.map(cardPassaggio).join("") : '<div class="card"><p class="muted">Nessun passaggio da inserire. Quelli che salvi compaiono qui.</p></div>'}
+    </section>
+    ${inseriti.length?`<details class="stack"><summary>Già inseriti (${inseriti.length}) · si cancellano dopo 30 giorni</summary><div class="stack">${inseriti.map(cardPassaggio).join("")}</div></details>`:""}
+    <p class="note">I passaggi restano solo su questo telefono e non vengono inviati a nessuno. Se cambi telefono o cancelli i dati del browser, quelli non ancora inseriti vanno persi.</p>
+    <button class="back" id="blocca">Blocca l'area operatore</button>`;
+
+  document.getElementById("indietro").onclick = () => (history.state && history.state.area) ? history.back() : vai({tab:"home"});
+  document.getElementById("blocca").onclick = () => { sbloccato = false; render(); };
+  document.getElementById("form-p").onsubmit = e => {
+    e.preventDefault();
+    const p = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+      quando: document.getElementById("p-quando").value,
+      centro: document.getElementById("p-centro").value,
+      codice: document.getElementById("p-codice").value.trim(),
+      nuovo: document.getElementById("p-nuovo").checked,
+      interventi: [...app.querySelectorAll(".chips input:checked")].map(x => x.value),
+      note: document.getElementById("p-note").value.trim(),
+      inserito: false
+    };
+    const tutti = caricaPassaggi(); tutti.push(p);
+    if (!scrivi(CHIAVE_P, tutti)) return avviso("Non riesco a salvare su questo telefono: controlla che il browser non sia in navigazione privata.");
+    scrivi(CHIAVE_CENTRO, p.centro);
+    avviso("Passaggio salvato"); renderPassaggi();
+  };
+  app.querySelectorAll("[data-ins]").forEach(b => b.onclick = () => aggiornaPassaggio(b.dataset.ins, p => { p.inserito = !p.inserito; p.inseritoIl = Date.now(); }, b.textContent.includes("Inserito") ? "Segnato come inserito in Matrioska" : "Rimesso tra quelli da inserire"));
+  app.querySelectorAll("[data-del]").forEach(b => b.onclick = () => {
+    if (b.dataset.conferma !== "1"){ b.dataset.conferma = "1"; b.textContent = "Conferma eliminazione"; return; }
+    scrivi(CHIAVE_P, caricaPassaggi().filter(p => p.id !== b.dataset.del)); avviso("Passaggio eliminato"); renderPassaggi();
+  });
+  const c = document.getElementById("copia");
+  if (c) c.onclick = () => {
+    const testo = daInserire.map(p => `${dataOra(p.quando)} · ${p.centro} · ${p.codice}${p.nuovo?" (primo accesso)":""} · ${p.interventi.join(", ")}${p.note?" · "+p.note:""}`).join("\n");
+    const fallback = () => { const t = document.createElement("textarea"); t.value = testo; t.className = "copia-testo"; c.after(t); t.select(); avviso("Seleziona e copia il testo"); };
+    navigator.clipboard ? navigator.clipboard.writeText(testo).then(() => avviso("Riepilogo copiato"), fallback) : fallback();
+  };
+}
+
+const dataOra = s => new Date(s).toLocaleString("it-IT", { weekday:"short", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" });
+function cardPassaggio(p){
+  return `<div class="card passaggio ${p.inserito?"fatto":""}">
+    <div class="row"><b class="num">${dataOra(p.quando)}</b>${p.nuovo?'<span class="tag">Primo accesso</span>':""}</div>
+    <h3>${esc(p.codice)}</h3>
+    <p class="muted">${esc(p.centro)}</p>
+    <p>${p.interventi.map(i=>`<span class="pill">${esc(i)}</span>`).join(" ")}</p>
+    ${p.note?`<p class="muted">${esc(p.note)}</p>`:""}
+    <div class="row" style="justify-content:flex-start">
+      <button class="btn ${p.inserito?"ghost":""} piccolo" data-ins="${p.id}">${p.inserito?"Rimetti da inserire":"Inserito in Matrioska ✓"}</button>
+      <button class="back" data-del="${p.id}">Elimina</button>
+    </div></div>`;
+}
+function aggiornaPassaggio(id, fn, msg){
+  const tutti = caricaPassaggi(); const p = tutti.find(x => x.id===id); if (!p) return;
+  fn(p); scrivi(CHIAVE_P, tutti); avviso(msg); renderPassaggi();
+}
+
+function renderPin(){
+  const salvato = leggi(CHIAVE_PIN, null);
+  app.innerHTML = `<button class="back" id="indietro">‹ Indietro</button>
+    <div class="stack"><span class="eyebrow">Area operatore</span><h1>${salvato?"Inserisci il PIN":"Crea il tuo PIN"}</h1>
+    <p class="muted">${salvato?"L'area passaggi è riservata a chi usa questo telefono.":"Scegli un PIN di 4-6 cifre. Servirà per aprire l'area passaggi su questo telefono."}</p></div>
+    <form class="card stack" id="form-pin">
+      <input class="pin" id="pin" type="password" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" autocomplete="off" required aria-label="PIN">
+      ${salvato?"":'<input class="pin" id="pin2" type="password" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" autocomplete="off" required aria-label="Ripeti il PIN" placeholder="Ripeti il PIN">'}
+      <p class="errore" id="err" aria-live="polite"></p>
+      <button class="btn" type="submit">${salvato?"Apri":"Salva PIN"}</button>
+    </form>
+    ${salvato?'<p class="note">PIN dimenticato? Per sicurezza non si può recuperare: chiedi a chi gestisce l\'app come azzerare l\'area passaggi.</p>':""}`;
+  document.getElementById("indietro").onclick = () => (history.state && history.state.area) ? history.back() : vai({tab:"home"});
+  document.getElementById("pin").focus();
+  document.getElementById("form-pin").onsubmit = async e => {
+    e.preventDefault();
+    const pin = document.getElementById("pin").value, err = document.getElementById("err");
+    if (!/^[0-9]{4,6}$/.test(pin)) return err.textContent = "Il PIN deve avere da 4 a 6 cifre.";
+    if (!salvato){
+      if (pin !== document.getElementById("pin2").value) return err.textContent = "I due PIN non coincidono.";
+      if (!scrivi(CHIAVE_PIN, await hashPin(pin))) return err.textContent = "Questo browser non permette di salvare dati: esci dalla navigazione privata.";
+    } else if (await hashPin(pin) !== salvato) {
+      document.getElementById("pin").value = ""; return err.textContent = "PIN non corretto.";
+    }
+    sbloccato = true; ultimoUso = Date.now(); renderPassaggi();
+  };
 }
 
 function cerca(q){
