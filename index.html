@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Formazione Operatori</title>
+<meta name="description" content="Formazione, materiali e documenti per gli operatori dei Centri di Ascolto.">
+<meta name="theme-color" content="#9e0b23">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Formazione">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+body{margin:0;font:14px system-ui,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700;900&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: banda rossa in alto come i siti della rete Caritas, contenuti su fondo chiaro in una colonna da telefono, barra schede in basso */
+:root{
+  --red:#c8102e; --red-deep:#9e0b23; --on-red:#ffffff;
+  --bg:#f6f5f4; --surface:#ffffff; --ink:#231f20; --muted:#5f5a5b; --line:#e6e2e1;
+  --red-soft:#fbe8eb; --ok:#1d7a4a; --ok-soft:#e2f2e9;
+  --shadow:0 1px 2px rgba(35,31,32,.06),0 4px 14px rgba(35,31,32,.06);
+  --display:"Titillium Web","Segoe UI",system-ui,sans-serif;
+  --body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --red:#ff4d63; --red-deep:#a3122a; --on-red:#ffffff;
+  --bg:#141617; --surface:#1f2224; --ink:#f1efee; --muted:#a9a3a2; --line:#33373a;
+  --red-soft:#3b1a20; --ok:#5cd096; --ok-soft:#163226; --shadow:none; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --red:#ff4d63; --red-deep:#a3122a; --on-red:#ffffff;
+  --bg:#141617; --surface:#1f2224; --ink:#f1efee; --muted:#a9a3a2; --line:#33373a;
+  --red-soft:#3b1a20; --ok:#5cd096; --ok-soft:#163226; --shadow:none; color-scheme:dark}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--red-deep)}
+.gutter{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--red-deep);color:var(--on-red)}
+.topbar .gutter{display:flex;align-items:center;gap:10px;padding-block:10px}
+.mark{width:30px;height:30px;flex:none}
+.brand{display:grid;line-height:1.1}
+.brand b{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:.01em}
+.brand small{font-size:.75rem;opacity:.85}
+.band{background:var(--red-deep);color:var(--on-red)}
+.band .gutter{padding-block:8px 64px;display:grid;gap:10px}
+.band blockquote{margin:0;font-family:var(--display);font-weight:600;font-size:1.65rem;line-height:1.2;text-wrap:balance}
+.band cite{font-style:normal;font-size:.85rem;opacity:.85;letter-spacing:.06em;text-transform:uppercase}
+.wrap{padding-block:20px 110px;display:grid;gap:22px}
+.band:not([hidden]) + .wrap{margin-top:-48px;padding-top:0}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:1.9rem;font-weight:700}
+h2{font-size:1.3rem;font-weight:700}
+h3{font-size:1.06rem;font-weight:600}
+p{margin:0}
+.eyebrow{font-family:var(--display);font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;color:var(--red);font-weight:700}
+.muted{color:var(--muted)}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 9px;border-radius:999px;background:var(--red-soft);color:var(--red)}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.stack{display:grid;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;display:grid;gap:8px;min-width:0}
+button.card{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%}
+button.card:hover,a.card:hover{border-color:var(--red)}
+a.card{color:inherit;text-decoration:none}
+.apri{color:var(--red);font-weight:700;font-size:.9rem}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.mod{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start}
+.ico{width:44px;height:44px;border-radius:50%;background:var(--red-soft);color:var(--red);display:grid;place-items:center}
+.ico svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mod > div{display:grid;gap:6px;min-width:0}
+.bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--red);border-radius:99px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.btn{font:inherit;font-family:var(--display);font-weight:700;letter-spacing:.02em;border:0;border-radius:999px;padding:11px 22px;background:var(--red);color:#fff;cursor:pointer}
+:root[data-theme="dark"] .btn{color:#1d0b0e}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn{color:#1d0b0e}}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.45;cursor:default}
+.back{background:none;border:0;font:inherit;color:var(--red);font-weight:700;cursor:pointer;padding:0;justify-self:start}
+.progress{gap:12px}
+.progress .big{font-family:var(--display);font-weight:900;font-size:2.2rem;line-height:1;color:var(--red)}
+.metodo{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.metodo button{font:inherit;color:inherit;text-align:left;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px 12px;display:grid;gap:4px;min-width:0}
+.metodo button:hover{border-color:var(--red)}
+.metodo b{font-family:var(--display);font-size:1.05rem;color:var(--red)}
+.metodo span{font-size:.85rem;color:var(--muted);line-height:1.35}
+@media (max-width:420px){.metodo{grid-template-columns:1fr}}
+.search{width:100%;font:inherit;padding:12px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);box-sizing:border-box}
+.lesson-body{display:grid;gap:12px;max-width:65ch}
+.lesson-body ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.lesson-body li::marker{color:var(--red)}
+.callout{padding:14px 16px;background:var(--red-soft);border-radius:var(--r);font-family:var(--display);font-weight:600;font-size:1.05rem;line-height:1.35}
+.opt{font:inherit;color:inherit;text-align:left;width:100%;padding:12px 16px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);cursor:pointer}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--red);background:var(--red-soft)}
+.num{font-variant-numeric:tabular-nums}
+.phones{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.phones .card{gap:2px}
+.phone{font-family:var(--display);font-weight:900;font-size:1.5rem;color:var(--red);user-select:all}
+.phones p{font-size:.82rem;line-height:1.3}
+@media (max-width:420px){.phones{grid-template-columns:1fr}}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);z-index:5}
+nav.tabs button{font:inherit;font-family:var(--display);font-size:.78rem;font-weight:600;background:none;border:0;border-top:3px solid transparent;color:var(--muted);padding:8px 4px 12px;display:grid;justify-items:center;gap:3px;cursor:pointer}
+nav.tabs button[aria-current="true"]{color:var(--red);border-top-color:var(--red)}
+nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+.note{font-size:.85rem;color:var(--muted)}
+/* Fluidità: risposta al tocco e transizioni tra schermate */
+html{-webkit-tap-highlight-color:transparent}
+button,a{touch-action:manipulation}
+.card,.btn,.opt,.metodo button{transition:transform .12s ease,border-color .2s,background-color .2s}
+.card:active,.btn:active,.opt:active,.metodo button:active{transform:scale(.98)}
+nav.tabs svg{transition:transform .15s ease}
+nav.tabs button:active svg{transform:scale(.88)}
+.opt.right{animation:pop .28s ease-out}
+.opt.wrong{animation:scuoti .3s ease-in-out}
+@keyframes pop{50%{transform:scale(1.02)}}
+@keyframes scuoti{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@keyframes entra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#app.entra{animation:entra .24s ease-out}
+.topbar{view-transition-name:topbar}
+nav.tabs{view-transition-name:tabs}
+html{--vt-out:-18px;--vt-in:18px}
+html[data-dir="indietro"]{--vt-out:18px;--vt-in:-18px}
+::view-transition-old(root){animation:vt-out .14s ease-in both}
+::view-transition-new(root){animation:vt-in .22s ease-out both}
+@keyframes vt-out{to{opacity:0;transform:translateX(var(--vt-out))}}
+@keyframes vt-in{from{opacity:0;transform:translateX(var(--vt-in))}}
+@media (prefers-reduced-motion: reduce){*,::view-transition-old(root),::view-transition-new(root){transition:none!important;animation:none!important}}
+</style>
+
+
+</head>
+<body>
+<header class="topbar"><div class="gutter">
+  <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#fff"/><path d="M16 24s-7-4.4-7-9.3A3.9 3.9 0 0 1 16 12.5a3.9 3.9 0 0 1 7 2.2C23 19.6 16 24 16 24z" fill="#c8102e"/></svg>
+  <div class="brand"><b>Formazione Operatori</b><small>Per chi serve nei Centri di Ascolto</small></div>
+</div></header>
+<section class="band" id="band" hidden><div class="gutter">
+  <blockquote>«Ero straniero e mi avete accolto»</blockquote>
+  <cite>Matteo 25,35</cite>
+</div></section>
+<main class="wrap gutter" id="app"></main>
+
+<nav class="tabs" aria-label="Sezioni">
+  <button data-tab="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Inizio</button>
+  <button data-tab="formazione"><svg viewBox="0 0 24 24"><path d="M2 8l10-5 10 5-10 5z"/><path d="M6 10v5c3 3 9 3 12 0v-5"/></svg>Formazione</button>
+  <button data-tab="materiali"><svg viewBox="0 0 24 24"><path d="M4 4h6l2 2h8v14H4z"/></svg>Materiali</button>
+  <button data-tab="documenti"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h8M9 17h8"/></svg>Utili</button>
+</nav>
+
+<script>
+const MODULI = [
+  { id:"ascolto", titolo:"Accogliere e ascoltare", sotto:"Lo stile del Centro di Ascolto", durata:"25 min",
+    lezioni:[
+      { titolo:"Che cos'è il Centro di Ascolto", testo:`<p>Il Centro di Ascolto è il luogo dove la comunità incontra le persone in difficoltà. Prima di dare risposte materiali, offre <strong>tempo, attenzione e relazione</strong>.</p><ul><li>Accoglie chiunque, senza distinzione di provenienza, fede o situazione.</li><li>Ascolta per capire il bisogno reale, non solo la richiesta.</li><li>Accompagna la persona verso le risorse del territorio.</li></ul><div class="callout">Ascoltare viene prima di aiutare: la risposta giusta nasce da un ascolto fatto bene.</div>`},
+      { titolo:"Il primo colloquio", testo:`<p>Il primo incontro lascia un'impressione che dura. Alcune attenzioni pratiche:</p><ul><li>Presentati con il tuo nome e spiega cosa fa il Centro.</li><li>Scegli uno spazio riservato, senza interruzioni.</li><li>Usa domande aperte: «Mi racconta cosa la porta qui?»</li><li>Non promettere ciò che non puoi garantire.</li><li>Concludi con un passo concreto e la data del prossimo incontro.</li></ul>`},
+      { titolo:"Riservatezza e dati personali", testo:`<p>Le storie che ascoltiamo appartengono alle persone. Trattiamo i loro dati con cura e nel rispetto del GDPR.</p><ul><li>Raccogli solo le informazioni necessarie.</li><li>Fai firmare l'informativa privacy prima di registrare i dati.</li><li>Non parlare dei casi fuori dall'équipe.</li><li>Conserva schede e documenti in luoghi chiusi o in archivi protetti.</li></ul>`}
+    ],
+    quiz:[
+      { d:"Durante il primo colloquio è meglio…", o:["Compilare subito tutta la scheda","Lasciare spazio al racconto con domande aperte","Proporre subito un pacco viveri"], r:1 },
+      { d:"Una persona ti chiede un aiuto che il Centro non può garantire. Cosa fai?", o:["Prometto comunque di provarci","Spiego con chiarezza cosa possiamo fare e cerco altre risorse","Chiudo il colloquio"], r:1 },
+      { d:"Quando si fa firmare l'informativa privacy?", o:["Prima di registrare i dati","Solo se la persona lo chiede","A fine percorso"], r:0 }
+    ]},
+  { id:"poverta", titolo:"Leggere le povertà", sotto:"Dai bisogni alle risposte", durata:"20 min",
+    lezioni:[
+      { titolo:"Le povertà di oggi", testo:`<p>La povertà raramente ha una sola causa. Spesso si intrecciano più dimensioni:</p><ul><li><strong>Economica</strong>: reddito insufficiente, debiti, lavoro precario.</li><li><strong>Abitativa</strong>: sfratti, affitti insostenibili, alloggi inadeguati.</li><li><strong>Relazionale</strong>: solitudine, rotture familiari.</li><li><strong>Sanitaria</strong>: malattie, dipendenze, disagio psichico.</li><li><strong>Educativa</strong>: bassa scolarità, difficoltà dei figli.</li></ul>`},
+      { titolo:"Dal bisogno al progetto", testo:`<p>Ogni aiuto dovrebbe inserirsi in un piccolo progetto condiviso con la persona.</p><ul><li>Definite insieme un obiettivo raggiungibile.</li><li>Stabilite chi fa cosa e in quali tempi.</li><li>Verificate a scadenza e riadattate.</li></ul><div class="callout">L'obiettivo è l'autonomia della persona, non la dipendenza dal servizio.</div>`}
+    ],
+    quiz:[
+      { d:"La povertà relazionale riguarda soprattutto…", o:["La mancanza di reddito","Solitudine e legami fragili","La casa"], r:1 },
+      { d:"Un buon progetto di aiuto è…", o:["Deciso dall'operatore","Condiviso con la persona e verificato nel tempo","Uguale per tutti"], r:1 }
+    ]},
+  { id:"rete", titolo:"Lavorare in rete", sotto:"Servizi, parrocchie, territorio", durata:"15 min",
+    lezioni:[
+      { titolo:"Perché fare rete", testo:`<p>Nessun servizio può rispondere da solo a bisogni complessi. Collaborare con servizi sociali, consultori, scuole e associazioni evita sovrapposizioni e lascia meno persone senza risposta.</p><ul><li>Conosci i referenti del territorio e tieni aggiornati i contatti.</li><li>Prima di inviare una persona a un altro servizio, chiedi il suo consenso.</li><li>Accompagna l'invio con una telefonata o una breve relazione.</li></ul>`}
+    ],
+    quiz:[
+      { d:"Prima di segnalare una persona a un altro servizio serve…", o:["Il suo consenso","L'autorizzazione del parroco","Niente"], r:0 }
+    ]},
+  { id:"cura", titolo:"Prendersi cura di sé", sotto:"Limiti, équipe, supervisione", durata:"15 min",
+    lezioni:[
+      { titolo:"Riconoscere la fatica", testo:`<p>Chi ascolta ogni giorno storie difficili può accumulare stanchezza emotiva. Segnali da non trascurare:</p><ul><li>Irritabilità o distacco verso le persone accolte.</li><li>Pensare continuamente ai casi anche fuori dal servizio.</li><li>Senso di inutilità o di dover risolvere tutto da soli.</li></ul><div class="callout">Parlane in équipe: condividere la fatica fa parte del servizio.</div>`}
+    ],
+    quiz:[
+      { d:"Se un caso ti pesa molto, la cosa migliore è…", o:["Tenerlo per te","Parlarne in équipe o in supervisione","Smettere di seguirlo senza dirlo"], r:1 }
+    ]}
+];
+
+// Documenti pubblici di Caritas Italiana (link ai file ufficiali, verificati ottobre 2026)
+const MATERIALI = [
+  { cat:"Identità e orientamenti", titolo:"Percorsi di strategia pastorale 2023-2027", tipo:"PDF", fonte:"Caritas Italiana · 2023",
+    nota:"«Insieme sulla via degli ultimi, secondo lo stile del Vangelo, con creatività»: le priorità della rete Caritas per questi anni.",
+    url:"https://www.caritas.it/wp-content/uploads/sites/2/2023/07/Percorsi-pastorale-Strategia-2023-2027.pdf" },
+  { cat:"Identità e orientamenti", titolo:"Carta pastorale «Lo riconobbero nello spezzare il pane»", tipo:"PDF", fonte:"Caritas Italiana · 2023",
+    nota:"Documento di riferimento sul senso del servizio della carità nella comunità.",
+    url:"https://www.caritas.it/wp-content/uploads/sites/2/2023/05/CARTA-PASTORALELo-riconobbero-nello-spezzare-il-pane.pdf" },
+  { cat:"Identità e orientamenti", titolo:"Statuto di Caritas Italiana", tipo:"PDF", fonte:"CEI · testo del 1990",
+    nota:"Natura, finalità e compiti di Caritas Italiana, con la prevalente funzione pedagogica.",
+    url:"https://www.chiesacattolica.it/wp-content/uploads/sites/31/2017/02/Statuto_Caritas_Italiana_1990.pdf" },
+
+  { cat:"Strumenti per i Centri di Ascolto", titolo:"Vademecum Centri di Ascolto", tipo:"Pagina", fonte:"Caritas Italiana · 2022, aggiornato 2026",
+    nota:"Lo strumento operativo nazionale: cinque capitoli di schede pratiche su identità, organizzazione, presa in carico, cura degli operatori e raccolta dati.",
+    url:"https://www.caritas.it/vademecum-centri-di-ascolto/" },
+  { cat:"Strumenti per i Centri di Ascolto", titolo:"Scheda A1 · Il Centro di Ascolto: funzioni e stile", tipo:"PDF", fonte:"Vademecum CdA · cap. 1",
+    nota:"Cosa fa un CdA e con quale stile accoglie.",
+    url:"https://www.caritas.it/wp-content/uploads/sites/2/2026/08/Vademecum-CdA_Scheda-A1.pdf" },
+  { cat:"Strumenti per i Centri di Ascolto", titolo:"Scheda B1 · Lavorare in rete", tipo:"PDF", fonte:"Vademecum CdA · cap. 1",
+    nota:"Collaborare con servizi, parrocchie e territorio.",
+    url:"https://archivio.caritas.it/materiali/vademecumCdA/capitolo1/vademecumCdA_schedaB1.pdf" },
+  { cat:"Strumenti per i Centri di Ascolto", titolo:"Scheda C2 · Spazi e logistica", tipo:"PDF", fonte:"Vademecum CdA · cap. 2",
+    nota:"Come organizzare luoghi e tempi del Centro.",
+    url:"https://www.caritas.it/wp-content/uploads/sites/2/2026/08/Vademecum-CdA_Scheda-C2.pdf" },
+  { cat:"Strumenti per i Centri di Ascolto", titolo:"Scheda A3 · Ascolto e presa in carico", tipo:"PDF", fonte:"Vademecum CdA · cap. 3",
+    nota:"Dal primo colloquio all'accompagnamento.",
+    url:"https://archivio.caritas.it/materiali/vademecumCdA/capitolo3/vademecumCdA_schedaA3.pdf" },
+  { cat:"Strumenti per i Centri di Ascolto", titolo:"Scheda A4 · La fatica del prendersi cura", tipo:"PDF", fonte:"Vademecum CdA · cap. 4",
+    nota:"Riconoscere e affrontare la stanchezza di chi ascolta.",
+    url:"https://archivio.caritas.it/materiali/vademecumCdA/capitolo4/vademecumCdA_schedaA4.pdf" },
+  { cat:"Strumenti per i Centri di Ascolto", titolo:"Scheda A5 · Perché raccogliere i dati", tipo:"PDF", fonte:"Vademecum CdA · cap. 5",
+    nota:"La funzione pastorale della raccolta dati e i suoi strumenti.",
+    url:"https://archivio.caritas.it/materiali/vademecumCdA/capitolo5/vademecumCdA_schedaA5.pdf" },
+  { cat:"Strumenti per i Centri di Ascolto", titolo:"Nelle trame della carità", tipo:"Pagina", fonte:"Caritas Italiana e Scuola Sant'Anna di Pisa",
+    nota:"Riflessioni su struttura e modelli organizzativi di opere e servizi delle Caritas diocesane. Utile a chi coordina.",
+    url:"https://www.caritas.it/nelle-trame-della-carita/" },
+
+  { cat:"Dati e rapporti", titolo:"Lo sguardo della prossimità · Rapporto povertà 2025", tipo:"PDF", fonte:"Caritas Italiana · novembre 2025",
+    nota:"Rapporto su povertà ed esclusione sociale in Italia, versione integrale.",
+    url:"https://www.caritas.it/wp-content/uploads/sites/2/2025/11/Rapproto-Poverta-2025-Versione-integrale.pdf" },
+  { cat:"Dati e rapporti", titolo:"La povertà in Italia secondo i dati della rete Caritas", tipo:"PDF", fonte:"Report statistico nazionale 2026 · sintesi",
+    nota:"I dati 2025 raccolti dai Centri di Ascolto di tutta Italia.",
+    url:"https://www.caritas.it/wp-content/uploads/sites/2/2026/06/sintesi_report-statistico-Caritas-_2026.pdf" },
+  { cat:"Dati e rapporti", titolo:"XXXIV Rapporto Immigrazione Caritas-Migrantes 2025", tipo:"Pagina", fonte:"Caritas e Fondazione Migrantes · ottobre 2025",
+    nota:"«Giovani, testimoni di speranza»: i giovani di origine straniera in Italia.",
+    url:"https://www.migrantes.it/xxxiv-rapporto-immigrazione-2025-giovani-testimoni-di-speranza/" },
+  { cat:"Dati e rapporti", titolo:"Bilancio sociale 2024", tipo:"PDF", fonte:"Caritas Italiana · giugno 2025",
+    nota:"Attività, progetti e risorse di Caritas Italiana nell'anno.",
+    url:"https://www.caritas.it/wp-content/uploads/sites/2/2025/06/WEB_Caritas-Italiana_BILANCIO-SOCIALE-2024_01.pdf" }
+];
+
+// Schede del Vademecum collegate a ogni modulo (per inizio titolo)
+const APPROFONDISCI = {
+  ascolto:["Scheda A1","Scheda A3"],
+  poverta:["Lo sguardo della prossimità","La povertà in Italia"],
+  rete:["Scheda B1"],
+  cura:["Scheda A4"]
+};
+
+const DOCUMENTI = [
+  { cat:"Moduli", titolo:"Scheda di primo colloquio", tipo:"Modulo", nota:"Da caricare il modello in uso nella tua Caritas" },
+  { cat:"Moduli", titolo:"Informativa privacy e consenso", tipo:"Modulo", nota:"Da caricare" },
+  { cat:"Procedure", titolo:"Recupero e distribuzione di cibo: manuale di corrette prassi", tipo:"PDF", fonte:"Caritas Italiana e Banco Alimentare · 2015",
+    nota:"Regole igieniche per raccogliere, conservare e distribuire alimenti nelle opere caritative.",
+    url:"https://archivio.caritas.it/caritasitaliana/allegati/6258/ManualeCaritasBancoAlimentare.pdf" },
+  { cat:"Procedure", titolo:"Cosa fare in caso di emergenza al Centro", tipo:"Procedura", nota:"Da caricare" }
+];
+
+const NUMERI = [
+  { n:"112", t:"Numero unico di emergenza" },
+  { n:"1522", t:"Antiviolenza e stalking, gratuito h24" },
+  { n:"114", t:"Emergenza infanzia" }
+];
+
+// Avanzamento salvato solo su questo dispositivo
+let stato = { lette:{}, quiz:{} };
+try { stato = Object.assign(stato, JSON.parse(localStorage.getItem("formazione-stato")||"{}")); } catch(e){}
+const salva = () => { try { localStorage.setItem("formazione-stato", JSON.stringify(stato)); } catch(e){} };
+
+const app = document.getElementById("app");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function progressoModulo(m){
+  const tot = m.lezioni.length + 1;
+  let fatte = m.lezioni.filter((_,i)=>stato.lette[m.id+":"+i]).length;
+  if (stato.quiz[m.id] != null && stato.quiz[m.id] >= Math.ceil(m.quiz.length*0.6)) fatte++;
+  return { fatte, tot, pct: Math.round(fatte/tot*100) };
+}
+function progressoTotale(){
+  let f=0,t=0; MODULI.forEach(m=>{const p=progressoModulo(m); f+=p.fatte; t+=p.tot;});
+  return Math.round(f/t*100);
+}
+function prossimo(){
+  for (const m of MODULI){
+    const i = m.lezioni.findIndex((_,k)=>!stato.lette[m.id+":"+k]);
+    if (i>=0) return { m, i };
+    if (progressoModulo(m).pct<100) return { m, i:"quiz" };
+  }
+  return null;
+}
+
+let vista = { tab:"home" };
+const scrollSchede = {};
+const RIDOTTO = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const profondita = v => (v.lezione!=null || v.quiz) ? 2 : v.modulo ? 1 : 0;
+
+function vai(v, { storia = true } = {}){
+  const indietro = profondita(v) < profondita(vista);
+  if (profondita(vista)===0) scrollSchede[vista.tab] = scrollY;
+  if (storia) try {
+    // Le domande della verifica non riempiono la cronologia: Indietro riporta al modulo
+    (v.quiz && vista.quiz && v.modulo===vista.modulo) ? history.replaceState(v,"") : history.pushState(v,"");
+  } catch(e){}
+  vista = v;
+  const cambia = () => { render(); scrollTo(0, profondita(v)===0 ? (scrollSchede[v.tab]||0) : 0); animaBarre(); };
+  if (document.startViewTransition && !RIDOTTO){
+    document.documentElement.dataset.dir = indietro ? "indietro" : "avanti";
+    document.startViewTransition(cambia);
+  } else {
+    cambia();
+    if (!RIDOTTO){ app.classList.remove("entra"); void app.offsetWidth; app.classList.add("entra"); }
+  }
+}
+
+// Le barre di avanzamento si riempiono partendo da zero
+function animaBarre(){
+  if (RIDOTTO) return;
+  app.querySelectorAll(".bar>i").forEach(el => {
+    const w = el.style.width; el.style.transition = "none"; el.style.width = "0";
+    void el.offsetWidth; el.style.transition = ""; el.style.width = w;
+  });
+}
+
+// Tasto Indietro del telefono e del browser
+addEventListener("popstate", e => vai(e.state || { tab:"home" }, { storia:false }));
+
+function render(){
+  document.getElementById("band").hidden = !(vista.tab==="home" && !vista.modulo);
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-current", b.dataset.tab===vista.tab));
+  if (vista.lezione!=null) return renderLezione();
+  if (vista.quiz) return renderQuiz();
+  if (vista.modulo) return renderModulo();
+  ({home:renderHome, formazione:renderFormazione, materiali:()=>renderLista("materiali"), documenti:()=>renderLista("documenti")})[vista.tab]();
+}
+
+const ICONE = {
+  ascolto:'<path d="M6 9a6 6 0 1 1 10 4.5c-1.3 1-2 2-2 3.5a3 3 0 0 1-5.5 1.6"/><path d="M9 9a3 3 0 0 1 6 0"/>',
+  poverta:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>',
+  rete:'<circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.3 11l9.4-4M7.3 13l9.4 4"/>',
+  cura:'<path d="M12 20s-7-4.4-7-9.5A4 4 0 0 1 12 8a4 4 0 0 1 7 2.5C19 15.6 12 20 12 20z"/>'
+};
+function cardModulo(m){
+  const p = progressoModulo(m);
+  return `<button class="card mod" data-mod="${m.id}">
+    <span class="ico"><svg viewBox="0 0 24 24">${ICONE[m.id]||""}</svg></span>
+    <div><div class="row"><h3>${esc(m.titolo)}</h3>${p.pct===100?'<span class="tag ok">Completato</span>':`<span class="muted num">${p.fatte}/${p.tot}</span>`}</div>
+    <p class="muted">${esc(m.sotto)} · ${m.durata}</p>
+    <div class="bar"><i style="width:${p.pct}%"></i></div></div></button>`;
+}
+
+function renderHome(){
+  const pt = progressoTotale(), nx = prossimo();
+  app.innerHTML = `
+    <section class="card progress">
+      <span class="eyebrow">Il tuo percorso</span>
+      <div class="row"><span class="big num">${pt}%</span><span class="muted">${MODULI.filter(m=>progressoModulo(m).pct===100).length} moduli su ${MODULI.length} completati</span></div>
+      <div class="bar"><i style="width:${pt}%"></i></div>
+      ${nx?`<p class="muted">Prossimo passo: <strong>${esc(nx.m.titolo)}</strong>, ${nx.i==="quiz"?"verifica finale":esc(nx.m.lezioni[nx.i].titolo)}</p>
+      <button class="btn" id="riprendi" style="justify-self:start">${pt?"Riprendi":"Inizia il percorso"}</button>`:`<p>Hai completato tutti i moduli. Grazie per il tuo servizio.</p>`}
+    </section>
+    <section class="stack">
+      <div class="stack" style="gap:4px"><span class="eyebrow">Il metodo</span><h2>Ascoltare, osservare, discernere</h2>
+      <p class="muted">I tre verbi che guidano il servizio della carità nelle comunità.</p></div>
+      <div class="metodo">
+        <button data-vai="ascolto"><b>Ascoltare</b><span>Accogliere la persona e la sua storia</span></button>
+        <button data-vai="poverta"><b>Osservare</b><span>Leggere le povertà e le risorse del territorio</span></button>
+        <button data-vai="rete"><b>Discernere</b><span>Scegliere insieme le risposte, in rete</span></button>
+      </div>
+    </section>
+    <input class="search" id="cerca" type="search" placeholder="Cerca in corsi, materiali e documenti">
+    <div class="stack" id="risultati"></div>
+    <section class="stack"><h2>Numeri utili</h2><div class="phones">${NUMERI.map(x=>`<div class="card"><span class="phone">${x.n}</span><p class="muted">${esc(x.t)}</p></div>`).join("")}</div></section>
+    <p class="note">Prototipo. Le lezioni sono testi di esempio da rivedere con la tua Caritas diocesana.</p>`;
+  if (nx) document.getElementById("riprendi").onclick = () => nx.i==="quiz" ? vai({tab:"formazione",modulo:nx.m.id,quiz:true}) : vai({tab:"formazione",modulo:nx.m.id,lezione:nx.i});
+  app.querySelectorAll("[data-vai]").forEach(b=>b.onclick=()=>vai({tab:"formazione",modulo:b.dataset.vai}));
+  document.getElementById("cerca").oninput = e => cerca(e.target.value.trim().toLowerCase());
+}
+
+function cerca(q){
+  const out = document.getElementById("risultati");
+  if (q.length<2){ out.innerHTML=""; return; }
+  const ris = [];
+  MODULI.forEach(m=>m.lezioni.forEach((l,i)=>{ if((l.titolo+" "+l.testo).toLowerCase().includes(q)) ris.push(`<button class="card" data-go="${m.id}:${i}"><span class="eyebrow">Lezione · ${esc(m.titolo)}</span><h3>${esc(l.titolo)}</h3></button>`); }));
+  [...MATERIALI,...DOCUMENTI].forEach(x=>{ if([x.titolo,x.cat,x.nota,x.fonte||""].join(" ").toLowerCase().includes(q)) ris.push(cardDoc(x)); });
+  out.innerHTML = ris.length ? ris.join("") : `<p class="muted">Nessun risultato per «${esc(q)}».</p>`;
+  out.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{ const [m,i]=b.dataset.go.split(":"); vai({tab:"formazione",modulo:m,lezione:+i}); });
+}
+
+function renderFormazione(){
+  app.innerHTML = `<div class="stack"><span class="eyebrow">Formazione</span><h1>Il percorso dell'operatore</h1>
+    <p class="muted">Ogni modulo ha brevi lezioni e una verifica finale. Serve il 60% di risposte giuste per completarlo.</p></div>
+    <div class="stack">${MODULI.map(cardModulo).join("")}</div>
+    <p class="note">L'avanzamento è salvato su questo dispositivo.</p>`;
+  app.querySelectorAll("[data-mod]").forEach(b=>b.onclick=()=>vai({tab:"formazione",modulo:b.dataset.mod}));
+}
+
+function renderModulo(){
+  const m = MODULI.find(x=>x.id===vista.modulo), p = progressoModulo(m);
+  const voto = stato.quiz[m.id];
+  app.innerHTML = `<button class="back" id="indietro">‹ Tutti i moduli</button>
+    <div class="stack"><span class="eyebrow">${m.durata}</span><h1>${esc(m.titolo)}</h1><p class="muted">${esc(m.sotto)}</p>
+    <div class="bar"><i style="width:${p.pct}%"></i></div></div>
+    <div class="stack">${m.lezioni.map((l,i)=>`<button class="card" data-l="${i}"><div class="row"><h3>${esc(l.titolo)}</h3>${stato.lette[m.id+":"+i]?'<span class="tag ok">Letta</span>':'<span class="tag">Da leggere</span>'}</div></button>`).join("")}
+    <button class="card" id="quiz"><div class="row"><h3>Verifica finale</h3>${voto!=null?`<span class="tag ${voto>=Math.ceil(m.quiz.length*0.6)?"ok":""} num">${voto}/${m.quiz.length}</span>`:'<span class="tag">Da fare</span>'}</div><p class="muted">${m.quiz.length} domande</p></button></div>
+    ${(APPROFONDISCI[m.id]||[]).length?`<section class="stack"><h2>Per approfondire</h2>${APPROFONDISCI[m.id].map(t=>MATERIALI.find(x=>x.titolo.startsWith(t))).filter(Boolean).map(cardDoc).join("")}</section>`:""}`;
+  document.getElementById("indietro").onclick=()=>vai({tab:"formazione"});
+  app.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>vai({tab:"formazione",modulo:m.id,lezione:+b.dataset.l}));
+  document.getElementById("quiz").onclick=()=>vai({tab:"formazione",modulo:m.id,quiz:true});
+}
+
+function renderLezione(){
+  const m = MODULI.find(x=>x.id===vista.modulo), i = vista.lezione, l = m.lezioni[i];
+  const ultima = i===m.lezioni.length-1;
+  app.innerHTML = `<button class="back" id="indietro">‹ ${esc(m.titolo)}</button>
+    <div class="stack"><span class="eyebrow">Lezione ${i+1} di ${m.lezioni.length}</span><h1>${esc(l.titolo)}</h1></div>
+    <article class="lesson-body">${l.testo}</article>
+    <button class="btn" id="avanti">${ultima?"Segna come letta e vai alla verifica":"Segna come letta e continua"}</button>`;
+  document.getElementById("indietro").onclick=()=>vai({tab:"formazione",modulo:m.id});
+  document.getElementById("avanti").onclick=()=>{ stato.lette[m.id+":"+i]=true; salva(); vai(ultima?{tab:"formazione",modulo:m.id,quiz:true}:{tab:"formazione",modulo:m.id,lezione:i+1}); };
+}
+
+function renderQuiz(){
+  const m = MODULI.find(x=>x.id===vista.modulo);
+  const q = vista.q||0, giuste = vista.giuste||0;
+  if (q>=m.quiz.length){
+    const soglia = Math.ceil(m.quiz.length*0.6), ok = giuste>=soglia;
+    stato.quiz[m.id] = Math.max(stato.quiz[m.id]||0, giuste); salva();
+    app.innerHTML = `<div class="stack"><span class="eyebrow">Verifica · ${esc(m.titolo)}</span><h1>${ok?"Modulo completato":"Quasi"}</h1>
+      <p class="num">Hai risposto bene a ${giuste} domande su ${m.quiz.length}.</p>
+      <p class="muted">${ok?"Puoi passare al modulo successivo.":`Ne servono almeno ${soglia}. Rileggi le lezioni e riprova.`}</p></div>
+      <div class="row" style="justify-content:flex-start"><button class="btn" id="fine">Torna al modulo</button><button class="btn ghost" id="riprova">Riprova</button></div>`;
+    document.getElementById("fine").onclick=()=>vai({tab:"formazione",modulo:m.id});
+    document.getElementById("riprova").onclick=()=>vai({tab:"formazione",modulo:m.id,quiz:true});
+    return;
+  }
+  const d = m.quiz[q];
+  app.innerHTML = `<button class="back" id="indietro">‹ ${esc(m.titolo)}</button>
+    <div class="stack"><span class="eyebrow num">Domanda ${q+1} di ${m.quiz.length}</span><h2>${esc(d.d)}</h2></div>
+    <div class="stack">${d.o.map((o,k)=>`<button class="opt" data-k="${k}">${esc(o)}</button>`).join("")}</div>
+    <p id="esito" aria-live="polite"></p>
+    <button class="btn" id="succ" disabled>Avanti</button>`;
+  document.getElementById("indietro").onclick=()=>vai({tab:"formazione",modulo:m.id});
+  let risposto=false, punti=giuste;
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    if (risposto) return; risposto=true;
+    const k=+b.dataset.k, giusta=k===d.r; if (giusta) punti++;
+    b.classList.add(giusta?"right":"wrong");
+    app.querySelector(`.opt[data-k="${d.r}"]`).classList.add("right");
+    document.getElementById("esito").textContent = giusta?"Risposta corretta.":"Non è questa: la risposta giusta è evidenziata in verde.";
+    document.getElementById("succ").disabled=false;
+  });
+  document.getElementById("succ").onclick=()=>vai({tab:"formazione",modulo:m.id,quiz:true,q:q+1,giuste:punti});
+}
+
+function renderLista(tipo){
+  const dati = tipo==="materiali"?MATERIALI:DOCUMENTI;
+  const cats = [...new Set(dati.map(x=>x.cat))];
+  app.innerHTML = `<div class="stack"><span class="eyebrow">${tipo==="materiali"?"Materiali Caritas":"Documenti utili"}</span>
+    <h1>${tipo==="materiali"?"Materiali":"Moduli e procedure"}</h1>
+    <p class="muted">${tipo==="materiali"?"I principali documenti pubblici di Caritas Italiana. Si aprono dal sito ufficiale, quindi serve la connessione.":"Modelli da usare al Centro e procedure operative. Le voci «Da caricare» aspettano i tuoi file."}</p></div>
+    ${cats.map(c=>`<section class="stack"><h2>${esc(c)}</h2>${dati.filter(x=>x.cat===c).map(cardDoc).join("")}</section>`).join("")}`;
+}
+
+function cardDoc(x){
+  const corpo = `<div class="row"><h3>${esc(x.titolo)}</h3><span class="tag ${x.url?"ok":""}">${esc(x.tipo)}</span></div>
+    ${x.fonte?`<span class="eyebrow">${esc(x.fonte)}</span>`:""}<p class="muted">${esc(x.nota)}</p>`;
+  return x.url ? `<a class="card link" href="${x.url}" target="_blank" rel="noopener">${corpo}<span class="apri">Apri ↗</span></a>` : `<div class="card">${corpo}</div>`;
+}
+
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{ if (b.dataset.tab!==vista.tab || profondita(vista)) vai({tab:b.dataset.tab}); });
+const h = location.hash.slice(1); if (["home","formazione","materiali","documenti"].includes(h)) vista.tab=h;
+try { history.replaceState(vista,""); } catch(e){}
+render(); animaBarre();
+if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script>
+
+</body>
+</html>
