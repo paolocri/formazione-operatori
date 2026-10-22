@@ -1,0 +1,25 @@
+name: Aggiorna notizie
+
+on:
+  schedule:
+    - cron: "0 5,12,17 * * *"   # tre volte al giorno (ore UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  notizie:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/aggiorna_notizie.py
+      - name: Salva se ci sono novità
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add news.json
+          git diff --cached --quiet || (git commit -m "Notizie aggiornate" && git push)
