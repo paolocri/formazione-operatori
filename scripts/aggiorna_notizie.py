@@ -10,7 +10,7 @@ def testo(html_str, limite=220):
     t = re.sub(r"<[^>]+>", " ", html_str or "")
     t = re.sub(r"\s+", " ", html.unescape(t)).strip()
     t = re.sub(r"\s*(L'articolo|The post) .*? proviene da .*$", "", t)
-    t = re.sub(r"^©[^)]*\)\s*(\W\s*)?", "", t)  # toglie il credito della foto in apertura
+    t = re.sub(r"^©[^)]*\)[^\w«\"]*", "", t)  # toglie il credito della foto in apertura
     return t if len(t) <= limite else t[:limite].rsplit(" ", 1)[0] + "…"
 
 def immagine(html_str):
