@@ -1,5 +1,7 @@
 # Formazione Operatori: versione installabile
 
+App online: https://paolocri.github.io/formazione-operatori/
+
 Questa cartella contiene l'app pronta per essere messa online come web app installabile (PWA).
 
 - `index.html`: l'app
