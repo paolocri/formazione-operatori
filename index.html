@@ -106,7 +106,7 @@ a.card{color:inherit;text-decoration:none}
 .phone{font-family:var(--display);font-weight:900;font-size:1.5rem;color:var(--red);user-select:all}
 .phones p{font-size:.82rem;line-height:1.3}
 @media (max-width:420px){.phones{grid-template-columns:1fr}}
-nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);z-index:5}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);z-index:5}
 nav.tabs button{font:inherit;font-family:var(--display);font-size:.78rem;font-weight:600;background:none;border:0;border-top:3px solid transparent;color:var(--muted);padding:8px 4px 12px;display:grid;justify-items:center;gap:3px;cursor:pointer}
 nav.tabs button[aria-current="true"]{color:var(--red);border-top-color:var(--red)}
 nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
@@ -198,7 +198,6 @@ html[data-dir="indietro"]{--vt-out:18px;--vt-in:-18px}
   <button data-tab="servizi"><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Servizi</button>
   <button data-tab="notizie"><svg viewBox="0 0 24 24"><path d="M4 5h13v14a1 1 0 0 0 1 1H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v10a1 1 0 0 1-2 0M7 9h7M7 13h7M7 17h4"/></svg>Notizie</button>
   <button data-tab="materiali"><svg viewBox="0 0 24 24"><path d="M4 4h6l2 2h8v14H4z"/></svg>Materiali</button>
-  <button data-tab="documenti"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h8M9 17h8"/></svg>Utili</button>
 </nav>
 
 <script>
@@ -327,6 +326,9 @@ const MATERIALI = [
   { cat:"Strumenti per i Centri di Ascolto", titolo:"Scheda A5 · Perché raccogliere i dati", tipo:"PDF", fonte:"Vademecum CdA · cap. 5",
     nota:"La funzione pastorale della raccolta dati e i suoi strumenti.",
     url:"https://archivio.caritas.it/materiali/vademecumCdA/capitolo5/vademecumCdA_schedaA5.pdf" },
+  { cat:"Strumenti per i Centri di Ascolto", titolo:"Recupero e distribuzione di cibo: manuale di corrette prassi", tipo:"PDF", fonte:"Caritas Italiana e Banco Alimentare · 2015",
+    nota:"Regole igieniche per raccogliere, conservare e distribuire alimenti nelle opere caritative.",
+    url:"https://archivio.caritas.it/caritasitaliana/allegati/6258/ManualeCaritasBancoAlimentare.pdf" },
   { cat:"Strumenti per i Centri di Ascolto", titolo:"Nelle trame della carità", tipo:"Pagina", fonte:"Caritas Italiana e Scuola Sant'Anna di Pisa",
     nota:"Riflessioni su struttura e modelli organizzativi di opere e servizi delle Caritas diocesane. Utile a chi coordina.",
     url:"https://www.caritas.it/nelle-trame-della-carita/" },
@@ -345,14 +347,6 @@ const MATERIALI = [
     url:"https://www.caritas.it/wp-content/uploads/sites/2/2025/06/WEB_Caritas-Italiana_BILANCIO-SOCIALE-2024_01.pdf" }
 ];
 
-const DOCUMENTI = [
-  { cat:"Moduli", titolo:"Scheda di primo colloquio", tipo:"Modulo", nota:"Da caricare il modello in uso nella tua Caritas" },
-  { cat:"Moduli", titolo:"Informativa privacy e consenso", tipo:"Modulo", nota:"Da caricare" },
-  { cat:"Procedure", titolo:"Recupero e distribuzione di cibo: manuale di corrette prassi", tipo:"PDF", fonte:"Caritas Italiana e Banco Alimentare · 2015",
-    nota:"Regole igieniche per raccogliere, conservare e distribuire alimenti nelle opere caritative.",
-    url:"https://archivio.caritas.it/caritasitaliana/allegati/6258/ManualeCaritasBancoAlimentare.pdf" },
-  { cat:"Procedure", titolo:"Cosa fare in caso di emergenza al Centro", tipo:"Procedura", nota:"Da caricare" }
-];
 
 const NUMERI = [
   { n:"112", t:"Numero unico di emergenza" },
@@ -407,7 +401,7 @@ function render(){
   document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-current", b.dataset.tab===vista.tab));
   if (vista.servizio) return renderServizio();
   if (vista.area) return renderPassaggi();
-  ({home:renderHome, servizi:renderServizi, notizie:renderNotizie, materiali:()=>renderLista("materiali"), documenti:()=>renderLista("documenti")})[vista.tab]();
+  ({home:renderHome, servizi:renderServizi, notizie:renderNotizie, materiali:renderLista})[vista.tab]();
 }
 
 function cardAperto(x){
@@ -435,7 +429,7 @@ function renderHome(){
       ${aperti.length ? aperti.map(cardAperto).join("") : `<div class="card"><p class="muted">Oggi non ci sono Centri di Ascolto né l'Emporio aperti. Il Centro di Ascolto cittadino risponde al ${telLink("351 843 3143")} dal lunedì al venerdì, 9:00-12:30.</p></div>`}
       <button class="back" id="tutti">Tutti i servizi ›</button>
     </section>
-    <input class="search" id="cerca" type="search" placeholder="Cerca servizi, centri, documenti">
+    <input class="search" id="cerca" type="search" placeholder="Cerca servizi, centri, materiali">
     <div class="stack" id="risultati"></div>
     <section class="stack"><div class="row"><h2>Dalla rete Caritas</h2><button class="back" id="tutte">Tutte le notizie ›</button></div><div class="stack" id="box-notizie" data-max="2"></div></section>
     <section class="stack"><h2>Numeri utili</h2><div class="phones">${NUMERI.map(x=>`<div class="card"><span class="phone">${x.n}</span><p class="muted">${esc(x.t)}</p></div>`).join("")}</div></section>`;
@@ -681,7 +675,7 @@ function cerca(q){
   const ris = [];
   SERVIZI.forEach(s => { if ([s.titolo,s.sotto,s.testo,s.indirizzo||""].join(" ").toLowerCase().includes(q)) ris.push(`<button class="card" data-serv="${s.id}"><span class="eyebrow">Servizio</span><h3>${esc(s.titolo)}</h3></button>`); });
   CENTRI.forEach(c => { if ([c.nome,c.indirizzo,c.orario].join(" ").toLowerCase().includes(q)) ris.push(`<button class="card" data-serv="ascolto"><span class="eyebrow">Centro di Ascolto</span><h3>${esc(c.nome)}</h3><p class="muted">${esc(c.orario)}</p></button>`); });
-  [...MATERIALI,...DOCUMENTI].forEach(x=>{ if([x.titolo,x.cat,x.nota,x.fonte||""].join(" ").toLowerCase().includes(q)) ris.push(cardDoc(x)); });
+  MATERIALI.forEach(x=>{ if([x.titolo,x.cat,x.nota,x.fonte||""].join(" ").toLowerCase().includes(q)) ris.push(cardDoc(x)); });
   out.innerHTML = ris.length ? ris.join("") : `<p class="muted">Nessun risultato per «${esc(q)}».</p>`;
   collegaServizi();
 }
@@ -714,13 +708,11 @@ function renderNotizie(){
   mostraNotizie();
 }
 
-function renderLista(tipo){
-  const dati = tipo==="materiali"?MATERIALI:DOCUMENTI;
-  const cats = [...new Set(dati.map(x=>x.cat))];
-  app.innerHTML = `<div class="stack"><span class="eyebrow">${tipo==="materiali"?"Materiali Caritas":"Documenti utili"}</span>
-    <h1>${tipo==="materiali"?"Materiali":"Moduli e procedure"}</h1>
-    <p class="muted">${tipo==="materiali"?"I principali documenti pubblici di Caritas Italiana. Si aprono dal sito ufficiale, quindi serve la connessione.":"Modelli da usare al Centro e procedure operative. Le voci «Da caricare» aspettano i tuoi file."}</p></div>
-    ${cats.map(c=>`<section class="stack"><h2>${esc(c)}</h2>${dati.filter(x=>x.cat===c).map(cardDoc).join("")}</section>`).join("")}`;
+function renderLista(){
+  const cats = [...new Set(MATERIALI.map(x=>x.cat))];
+  app.innerHTML = `<div class="stack"><span class="eyebrow">Materiali Caritas</span><h1>Materiali</h1>
+    <p class="muted">I principali documenti pubblici di Caritas Italiana. Si aprono dal sito ufficiale, quindi serve la connessione.</p></div>
+    ${cats.map(c=>`<section class="stack"><h2>${esc(c)}</h2>${MATERIALI.filter(x=>x.cat===c).map(cardDoc).join("")}</section>`).join("")}`;
 }
 
 function cardDoc(x){
@@ -730,7 +722,7 @@ function cardDoc(x){
 }
 
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{ if (b.dataset.tab!==vista.tab || profondita(vista)) vai({tab:b.dataset.tab}); });
-const h = location.hash.slice(1); if (["home","servizi","notizie","materiali","documenti"].includes(h)) vista.tab=h;
+const h = location.hash.slice(1); if (["home","servizi","notizie","materiali"].includes(h)) vista.tab=h;
 try { history.replaceState(vista,""); } catch(e){}
 render();
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));

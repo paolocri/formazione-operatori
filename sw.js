@@ -1,5 +1,5 @@
 // Cambia la versione a ogni aggiornamento dell'app, così i telefoni scaricano i file nuovi
-const VERSIONE = "formazione-v7";
+const VERSIONE = "formazione-v8";
 const FILE = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "fonts/fonts.css", "fonts/titillium-web-latin-600-normal.woff2", "fonts/titillium-web-latin-700-normal.woff2", "fonts/source-sans-3-latin-400-normal.woff2"];
 
 self.addEventListener("install", e => {
