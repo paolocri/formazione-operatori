@@ -1,4 +1,4 @@
-# Formazione Operatori: versione installabile
+# Operatori Caritas: versione installabile
 
 App online: https://paolocri.github.io/formazione-operatori/
 
