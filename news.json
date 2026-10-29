@@ -1,13 +1,20 @@
 {
- "aggiornato": "2026-10-28T17:39+00:00",
+ "aggiornato": "2026-10-29T12:40+00:00",
  "fonte": "https://www.caritas.it/feed/",
  "notizie": [
+  {
+   "titolo": "Alluvione in Nepal, due mesi dopo",
+   "link": "https://www.caritas.it/alluvione-in-nepal-due-mesi-dopo/",
+   "data": "2026-10-29T09:32:49+00:00",
+   "sommario": "Sono passati due mesi esatti dal 26 agosto 2026, quando una terribile e inattesa ondata di fango ha devastato 42 km di territorio nepalese, dal confine con la Regione autonoma del Tibet fino al distretto di Dadhing,…",
+   "immagine": "https://www.caritas.it/wp-content/uploads/sites/2/2026/10/WhatsApp-Image-2026-10-26-at-12.28.33-1-1024x768.jpeg"
+  },
   {
    "titolo": "Corpi civili di pace. Bando 2026",
    "link": "https://www.caritas.it/corpi-civili-di-pace-bando-2026/",
    "data": "2026-10-28T12:43:30+00:00",
    "sommario": "Il 27 ottobre 2026 il Dipartimento per le Politiche giovanili e il Servizio Civile Universale ha emanato un Bando di selezione per complessivi 82 volontari da impiegare in progetti per i Corpi civili di pace (CCP) in…",
-   "immagine": "https://www.caritas.it/wp-content/uploads/sites/2/2026/10/LOGOCCP-Bando2026.jpg"
+   "immagine": "https://www.caritas.it/wp-content/uploads/sites/2/2026/10/Corpi-civili-di-pace-1024x573.png"
   },
   {
    "titolo": "Giordania, attacco alla chiesa di Hammoud: il cordoglio e la vicinanza di Caritas Italiana",
@@ -64,13 +71,6 @@
    "data": "2026-10-19T11:55:41+00:00",
    "sommario": "Cos’è un confine e cosa una frontiera? Sono sinonimi? Alla tensione semantica tra confini e frontiere è dedicata l’edizione 2026, la 35esima, del “Rapporto Immigrazione” di Caritas Italiana e Fondazione Migrantes: 35…",
    "immagine": "https://www.caritas.it/wp-content/uploads/sites/2/2026/10/IMG_3442-scaled-e1792411137301-1024x592.jpeg"
-  },
-  {
-   "titolo": "Presentazione 35° Rapporto Immigrazione",
-   "link": "https://www.caritas.it/presentazione-35-rapporto-immigrazione/",
-   "data": "2026-10-14T09:43:06+00:00",
-   "sommario": "Lunedì 19 ottobre 2026, alle ore 10, presso la Pontificia Università Urbaniana di Roma, sarà presentata la 35ª edizione del Rapporto Immigrazione di Caritas Italiana e Fondazione Migrantes. Realizzato con Tau Editrice,…",
-   "immagine": "https://www.caritas.it/wp-content/uploads/sites/2/2026/10/rapporto-immigrazione-orizzontale-1024x546.png"
   }
  ]
 }
