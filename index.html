@@ -106,7 +106,7 @@ a.card{color:inherit;text-decoration:none}
 .phone{font-family:var(--display);font-weight:900;font-size:1.5rem;color:var(--red);user-select:all}
 .phones p{font-size:.82rem;line-height:1.3}
 @media (max-width:420px){.phones{grid-template-columns:1fr}}
-nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);z-index:5}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);z-index:5}
 nav.tabs button{font:inherit;font-family:var(--display);font-size:.78rem;font-weight:600;background:none;border:0;border-top:3px solid transparent;color:var(--muted);padding:8px 4px 12px;display:grid;justify-items:center;gap:3px;cursor:pointer}
 nav.tabs button[aria-current="true"]{color:var(--red);border-top-color:var(--red)}
 nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
@@ -178,6 +178,39 @@ html[data-dir="indietro"]{--vt-out:18px;--vt-in:-18px}
 @keyframes vt-out{to{opacity:0;transform:translateX(var(--vt-out))}}
 @keyframes vt-in{from{opacity:0;transform:translateX(var(--vt-in))}}
 @media (prefers-reduced-motion: reduce){*,::view-transition-old(root),::view-transition-new(root){transition:none!important;animation:none!important}}
+/* Lavoro: modulo del CV, anteprima su foglio bianco e stampa in A4 */
+.due{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.due .togli{grid-column:1/-1}
+.voce{border-top:1px solid var(--line);padding-top:12px}
+.voce:first-of-type{border-top:0;padding-top:0}
+.togli{justify-self:start;font-size:.9rem}
+.frasi-lista{display:flex;flex-wrap:wrap;gap:6px}
+.frase{font:inherit;font-size:.86rem;text-align:left;padding:6px 11px;border-radius:999px;border:1px dashed var(--red);background:var(--surface);color:var(--ink);cursor:pointer}
+.frase::before{content:"+ ";color:var(--red);font-weight:700}
+.frase.usata{border-style:solid;background:var(--ok-soft);border-color:var(--ok)}
+.frase.usata::before{content:"✓ ";color:var(--ok)}
+.query{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88rem;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;overflow-wrap:anywhere}
+.cv-doc{background:#fff;color:#1a1a1a;border:1px solid var(--line);border-radius:6px;padding:28px 24px;font-size:14px;line-height:1.45;box-shadow:var(--shadow);display:grid;gap:16px;min-width:0}
+.cv-doc h1{font-size:1.75rem;color:#1a1a1a}
+.cv-doc h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:#1a1a1a;border-bottom:1.5px solid #1a1a1a;padding-bottom:3px;margin-bottom:8px}
+.cv-doc header{display:grid;gap:4px}
+.cv-ruolo{font-family:var(--display);font-weight:600;font-size:1.1rem;color:#333}
+.cv-contatti{color:#444;font-size:.92rem}
+.cv-doc section{display:grid;gap:4px;break-inside:avoid-page}
+.cv-voce{display:grid;grid-template-columns:96px 1fr;gap:12px;margin-bottom:6px;break-inside:avoid}
+.cv-quando{color:#555;font-variant-numeric:tabular-nums}
+.cv-doc ul{margin:3px 0 0;padding-left:18px}
+.cv-privacy{font-size:.72rem;color:#555;margin-top:6px}
+@media (max-width:420px){.cv-voce{grid-template-columns:1fr;gap:0}.cv-doc{padding:20px 16px}}
+@media print{
+  @page{size:A4;margin:15mm}
+  :root{padding:0!important}
+  html,body{background:#fff!important}
+  body::before,.topbar,.band,nav.tabs,.no-print,.avviso,.copia-testo{display:none!important}
+  #app{padding:0!important;margin:0;max-width:none;display:block;animation:none!important}
+  .cv-doc{border:0;box-shadow:none;padding:0;border-radius:0;font-size:10.5pt}
+  .cv-voce{grid-template-columns:28mm 1fr}
+}
 </style>
 
 
@@ -198,6 +231,7 @@ html[data-dir="indietro"]{--vt-out:18px;--vt-in:-18px}
   <button data-tab="servizi"><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Servizi</button>
   <button data-tab="notizie"><svg viewBox="0 0 24 24"><path d="M4 5h13v14a1 1 0 0 0 1 1H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v10a1 1 0 0 1-2 0M7 9h7M7 13h7M7 17h4"/></svg>Notizie</button>
   <button data-tab="materiali"><svg viewBox="0 0 24 24"><path d="M4 4h6l2 2h8v14H4z"/></svg>Materiali</button>
+  <button data-tab="lavoro"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg>Lavoro</button>
 </nav>
 
 <script>
@@ -376,7 +410,7 @@ function apertiOggi(){
 let vista = { tab:"home" };
 const scrollSchede = {};
 const RIDOTTO = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const profondita = v => (v.servizio || v.area) ? 1 : 0;
+const profondita = v => v.lavoro==="anteprima" ? 2 : (v.servizio || v.area || v.lavoro) ? 1 : 0;
 
 function vai(v, { storia = true } = {}){
   const indietro = profondita(v) < profondita(vista);
@@ -401,7 +435,9 @@ function render(){
   document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-current", b.dataset.tab===vista.tab));
   if (vista.servizio) return renderServizio();
   if (vista.area) return renderPassaggi();
-  ({home:renderHome, servizi:renderServizi, notizie:renderNotizie, materiali:renderLista})[vista.tab]();
+  document.title = TITOLO;
+  if (vista.lavoro) return ({cv:renderCV, anteprima:renderAnteprima, cerca:renderCerca})[vista.lavoro]();
+  ({home:renderHome, servizi:renderServizi, notizie:renderNotizie, materiali:renderLista, lavoro:renderLavoro})[vista.tab]();
 }
 
 function cardAperto(x){
@@ -721,8 +757,355 @@ function cardDoc(x){
   return x.url ? `<a class="card link" href="${x.url}" target="_blank" rel="noopener">${corpo}<span class="apri">Apri ↗</span></a>` : `<div class="card">${corpo}</div>`;
 }
 
+// Lavoro: CV rapido e ricerca degli annunci.
+// I dati del CV restano SOLO in memoria in questa pagina: non vengono salvati sul telefono né inviati a nessuno.
+// Si cancellano chiudendo l'app, con «Cancella i dati» o dopo 30 minuti con l'app in secondo piano.
+const MANSIONI = [
+  { nome:"Assistente familiare (badante)", cerca:["badante","assistente familiare","assistenza anziani"],
+    attivita:["Assistenza a persona anziana nella vita quotidiana","Igiene personale e aiuto negli spostamenti","Preparazione dei pasti e cura della casa","Compagnia e accompagnamento a visite e commissioni","Assistenza a persona non autosufficiente, anche di notte"] },
+  { nome:"Collaboratore/collaboratrice domestica (colf)", cerca:["colf","collaboratrice domestica","collaboratore domestico"],
+    attivita:["Pulizia e riordino della casa","Lavaggio e stiratura","Preparazione dei pasti","Spesa e piccole commissioni"] },
+  { nome:"Addetto/a alle pulizie", cerca:["addetto pulizie","addetta pulizie","operaio pulizie","impresa di pulizie","sanificazione"],
+    attivita:["Pulizia di uffici, condomini e negozi","Pulizia e sanificazione di bagni e spazi comuni","Uso di macchinari per la pulizia (lavapavimenti)","Uso corretto dei prodotti detergenti"] },
+  { nome:"Magazziniere / addetto logistica", cerca:["magazziniere","addetto magazzino","operatore logistico","addetto logistica","mulettista"],
+    attivita:["Carico e scarico merci","Preparazione degli ordini (picking) e imballaggio","Controllo della merce in entrata e in uscita","Uso del transpallet","Uso del carrello elevatore (muletto)"] },
+  { nome:"Operaio/a di produzione", cerca:["operaio generico","addetto produzione","operaio produzione","operatore di produzione","addetto linea"],
+    attivita:["Lavoro su linea di produzione","Montaggio e confezionamento","Controllo qualità dei pezzi","Lavoro su turni","Rispetto delle norme di sicurezza"] },
+  { nome:"Operaio/a agricolo", cerca:["operaio agricolo","bracciante agricolo","addetto raccolta","lavoro agricolo"],
+    attivita:["Raccolta di frutta e ortaggi","Lavori in risaia e nei campi","Potatura e cura delle piante","Uso di piccoli attrezzi agricoli","Cura degli animali"] },
+  { nome:"Muratore / manovale edile", cerca:["manovale","muratore","operaio edile","aiuto muratore"],
+    attivita:["Preparazione di malta e calcestruzzo","Aiuto nella costruzione di muri e tramezzi","Demolizioni e pulizia del cantiere","Intonaci, imbiancature e piccole ristrutturazioni","Montaggio di ponteggi"] },
+  { nome:"Aiuto cuoco / lavapiatti", cerca:["aiuto cuoco","lavapiatti","addetto cucina","commis di cucina"],
+    attivita:["Preparazione degli ingredienti","Lavaggio di stoviglie e attrezzature","Pulizia e riordino della cucina","Rispetto delle norme igieniche (HACCP)"] },
+  { nome:"Cameriere/a / barista", cerca:["cameriere","cameriera","barista","addetto sala"],
+    attivita:["Servizio ai tavoli","Preparazione di caffè e bevande al banco","Accoglienza dei clienti","Preparazione e riordino della sala","Uso della cassa"] },
+  { nome:"Commesso/a / scaffalista", cerca:["scaffalista","commesso","addetto vendita","addetto supermercato","cassiere"],
+    attivita:["Rifornimento degli scaffali","Controllo delle scadenze","Assistenza ai clienti","Uso della cassa","Ricevimento e sistemazione della merce"] },
+  { nome:"Autista / corriere", cerca:["autista","corriere","autista consegne","driver"],
+    attivita:["Consegne a domicilio e ad aziende","Carico e scarico del furgone","Organizzazione del giro di consegne","Guida di furgone con patente B"] },
+  { nome:"Giardiniere / manutentore", cerca:["giardiniere","manutentore del verde","addetto manutenzione","tuttofare"],
+    attivita:["Taglio dell'erba e potatura di siepi","Cura di giardini e aree verdi","Piccole riparazioni e manutenzioni","Uso di decespugliatore e tosaerba"] },
+  { nome:"OSS / ASA", cerca:["OSS","operatore socio sanitario","ASA","ausiliario socio assistenziale"],
+    attivita:["Assistenza di base agli ospiti di RSA o strutture","Igiene e cura della persona","Aiuto nell'alimentazione e negli spostamenti","Collaborazione con infermieri ed educatori"] },
+];
+const LIVELLI = ["Madrelingua","Ottimo","Buono","Base"];
+const PATENTI = ["B","C","CE","D","CQC","AM / A"];
+const DISPONIBILITA = ["Subito","Tempo pieno","Part time","Turni","Notte","Fine settimana","Convivenza","Trasferte"];
+const DISP_FRASE = { "Subito":"a iniziare subito", "Tempo pieno":"a tempo pieno", "Part time":"part time", "Turni":"a lavorare su turni", "Notte":"a lavorare di notte", "Fine settimana":"nel fine settimana", "Convivenza":"alla convivenza", "Trasferte":"a trasferte" };
+const QUALITA = ["Puntualità","Affidabilità","Lavoro in squadra","Imparo in fretta","Pazienza","Ordine e precisione","Resistenza alla fatica","Gentilezza con le persone"];
+const CORSI = ["Sicurezza sul lavoro (D.Lgs. 81/08)","HACCP","Carrello elevatore (muletto)","Primo soccorso","Antincendio","Corso di lingua italiana"];
+const OPZIONI_RICERCA = [
+  { t:"Solo part time", piu:["part time"] },
+  { t:"Solo «senza esperienza»", piu:["senza esperienza"] },
+  { t:"Solo con convivenza", piu:["convivente"] },
+  { t:"Escludi stage e tirocini", meno:["stage","tirocinio"] },
+];
+
+const cvVuoto = () => ({ nome:"", cognome:"", tel:"", email:"", citta:"", nascita:"", patente:[], auto:false, obiettivo:"", profilo:"", disponibilita:[],
+  esperienze:[{ ruolo:"", dove:"", dal:"", al:"", attivita:"" }], formazione:[{ titolo:"", dove:"", anno:"" }], lingue:[{ lingua:"Italiano", livello:"Buono" }],
+  corsi:[], qualita:[], altro:"" });
+const NUOVA_VOCE = { esperienze:() => ({ ruolo:"", dove:"", dal:"", al:"", attivita:"" }), formazione:() => ({ titolo:"", dove:"", anno:"" }), lingue:() => ({ lingua:"", livello:"Buono" }) };
+let cv = cvVuoto(), cvToccato = false, cvNascostoDa = 0;
+let ricerca = { mansione:"", altre:"", dove:"Vercelli", raggio:"25", opzioni:[] };
+const TITOLO = document.title;
+
+function cancellaCV(){ cv = cvVuoto(); cvToccato = false; }
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) { cvNascostoDa = Date.now(); return; }
+  if (cvToccato && Date.now() - cvNascostoDa > 30*60*1000) { cancellaCV(); if (vista.tab==="lavoro") render(); avviso("Dati del CV cancellati dopo 30 minuti"); }
+});
+addEventListener("beforeunload", e => { if (cvToccato) { e.preventDefault(); e.returnValue = ""; } });
+addEventListener("afterprint", () => document.title = TITOLO);
+
+// Legge i campi di un modulo dentro un oggetto: name="esperienze.0.ruolo" → obj.esperienze[0].ruolo; i gruppi di chip vanno in liste
+function leggiForm(f, obj){
+  f.querySelectorAll("[name]").forEach(el => {
+    const p = el.name.split("."); let o = obj;
+    while (p.length > 1) o = o[p.shift()];
+    o[p[0]] = el.type==="checkbox" ? el.checked : el.value;
+  });
+  f.querySelectorAll("[data-lista]").forEach(fs => obj[fs.dataset.lista] = [...fs.querySelectorAll("input:checked")].map(x => x.value));
+}
+const campo = (et, nome, val, extra="", nota="") => `<label class="campo">${et}<input name="${nome}" value="${esc(val||"")}" ${extra}>${nota?`<small>${nota}</small>`:""}</label>`;
+const areaTesto = (et, nome, val, extra="", nota="") => `<label class="campo">${et}<textarea name="${nome}" rows="3" ${extra}>${esc(val||"")}</textarea>${nota?`<small>${nota}</small>`:""}</label>`;
+const scelte = (leg, lista, opzioni, sel) => `<fieldset class="chips" data-lista="${lista}"><legend>${leg}</legend>${opzioni.map(o=>`<label><input type="checkbox" value="${esc(o)}" ${sel.includes(o)?"checked":""}><span>${esc(o)}</span></label>`).join("")}</fieldset>`;
+const togliBtn = (lista, i) => `<button class="back togli" type="button" data-togli="${lista}.${i}">Togli</button>`;
+const listaMansioni = () => `<datalist id="mansioni">${MANSIONI.map(m=>`<option value="${esc(m.nome)}">`).join("")}</datalist>`;
+const elenco = a => a.length < 2 ? a.join("") : a.slice(0,-1).join(", ") + " e " + a[a.length-1];
+const tornaLavoro = () => (history.state && history.state.lavoro) ? history.back() : vai({tab:"lavoro"});
+
+function trovaMansione(testo){
+  const t = (testo||"").trim().toLowerCase(); if (t.length < 3) return null;
+  const parole = t.split(/[^a-zà-ù]+/);
+  return MANSIONI.find(m => m.nome.toLowerCase()===t) ||
+    MANSIONI.find(m => m.cerca.some(c => { c = c.toLowerCase(); return c.length > 4 ? t.includes(c) : parole.includes(c); }));
+}
+
+function renderLavoro(){
+  app.innerHTML = `<div class="stack"><span class="eyebrow">Per chi cerca lavoro</span><h1>Lavoro</h1>
+      <p class="muted">Prepara insieme alla persona un CV semplice e trova gli annunci giusti nella sua zona.</p></div>
+    <button class="card mod" id="vai-cv"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h7"/></svg></span>
+      <div><h3>Crea un CV</h3><p class="muted">Pochi campi e frasi pronte per i lavori più comuni. Si salva in PDF, da stampare o inviare.</p>${cvToccato?'<span class="tag ok" style="justify-self:start">CV in corso</span>':""}</div></button>
+    <button class="card mod" id="vai-cerca"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg></span>
+      <div><h3>Cerca annunci</h3><p class="muted">Le parole di ricerca giuste e i link già pronti per Indeed, LinkedIn, InfoJobs, le agenzie e i portali pubblici.</p></div></button>
+    <section class="card"><h3>Prima di iniziare</h3><ol class="passi">
+      <li>Serve un numero di telefono attivo e un indirizzo email: se la persona non ha un'email, conviene crearla insieme. Quasi tutti i siti la chiedono.</li>
+      <li>Nel CV non vanno foto, codice fiscale, stato civile, religione né informazioni sulla salute.</li>
+      <li>Il CV non dice che la persona è seguita dalla Caritas: è un CV come tutti gli altri.</li>
+      <li>Contano anche i lavori senza contratto, quelli fatti all'estero e il volontariato.</li>
+    </ol></section>
+    <p class="note">I dati del CV restano solo in questa pagina: non vengono salvati sul telefono né inviati a nessuno.</p>`;
+  document.getElementById("vai-cv").onclick = () => vai({tab:"lavoro", lavoro:"cv"});
+  document.getElementById("vai-cerca").onclick = () => vai({tab:"lavoro", lavoro:"cerca"});
+}
+
+function frasiPronte(ruolo, i){
+  const m = trovaMansione(ruolo); if (!m) return "";
+  const gia = (cv.esperienze[i] ? cv.esperienze[i].attivita : "").split("\n").map(s => s.trim());
+  return `<p class="note">Frasi pronte: tocca per aggiungerle.</p><div class="frasi-lista">${m.attivita.map(a=>`<button type="button" class="frase ${gia.includes(a)?"usata":""}" data-i="${i}">${esc(a)}</button>`).join("")}</div>`;
+}
+function cardEsperienza(e, i){
+  return `<div class="voce stack">
+    ${campo("Lavoro svolto",`esperienze.${i}.ruolo`,e.ruolo,'list="mansioni" placeholder="Es. Assistente familiare (badante)"')}
+    ${campo("Presso",`esperienze.${i}.dove`,e.dove,'placeholder="Es. Famiglia privata, Vercelli"',"Il nome dell'azienda, oppure «famiglia privata» con la città o il paese.")}
+    <div class="due">${campo("Dal",`esperienze.${i}.dal`,e.dal,'placeholder="Es. 2021"')}${campo("Al",`esperienze.${i}.al`,e.al,'placeholder="Es. 2023 oppure oggi"')}</div>
+    ${areaTesto("Cosa faceva",`esperienze.${i}.attivita`,e.attivita,'rows="4"',"Una cosa per riga.")}
+    <div class="stack" style="gap:6px" data-frasi="${i}">${frasiPronte(e.ruolo, i)}</div>
+    ${togliBtn("esperienze", i)}</div>`;
+}
+
+function renderCV(){
+  app.innerHTML = `<button class="back" id="indietro">‹ Indietro</button>
+    <div class="stack"><span class="eyebrow">Lavoro</span><h1>Crea un CV</h1>
+      <p class="muted">Compila solo quello che serve: i campi vuoti non compaiono nel CV.</p></div>
+    <form class="stack" id="form-cv" autocomplete="off">${listaMansioni()}
+      <section class="card stack"><h2>1. Chi è</h2>
+        <div class="due">${campo("Nome","nome",cv.nome,'autocapitalize="words" required')}${campo("Cognome","cognome",cv.cognome,'autocapitalize="words"')}</div>
+        ${campo("Telefono","tel",cv.tel,'type="tel" inputmode="tel"')}
+        ${campo("Email","email",cv.email,'type="email" inputmode="email" autocapitalize="off" spellcheck="false"')}
+        ${campo("Dove vive","citta",cv.citta,'placeholder="Es. Vercelli"',"Basta il comune: l'indirizzo completo non serve.")}
+        ${campo("Anno di nascita (facoltativo)","nascita",cv.nascita,'inputmode="numeric" maxlength="4" placeholder="Es. 1985"')}
+        ${scelte("Patente","patente",PATENTI,cv.patente)}
+        <label class="check"><input type="checkbox" name="auto" ${cv.auto?"checked":""}> Ha un'auto propria</label>
+      </section>
+      <section class="card stack"><h2>2. Che lavoro cerca</h2>
+        ${campo("Lavoro cercato","obiettivo",cv.obiettivo,'list="mansioni" placeholder="Scegli o scrivi, es. Magazziniere"')}
+        ${scelte("Disponibilità","disponibilita",DISPONIBILITA,cv.disponibilita)}
+        ${areaTesto("Presentazione breve","profilo",cv.profilo,'maxlength="500"',"Due o tre frasi su chi è e cosa sa fare.")}
+        <button class="back" type="button" id="proponi">Scrivi una proposta di presentazione</button>
+      </section>
+      <section class="card stack"><h2>3. Esperienze di lavoro</h2>
+        <p class="note">Inizia dal lavoro più recente.</p>
+        ${cv.esperienze.map(cardEsperienza).join("")}
+        <button class="btn ghost piccolo" type="button" data-agg="esperienze">+ Aggiungi esperienza</button>
+      </section>
+      <section class="card stack"><h2>4. Studi e corsi</h2>
+        ${cv.formazione.map((f,i)=>`<div class="voce stack">${campo("Titolo di studio o scuola",`formazione.${i}.titolo`,f.titolo,'placeholder="Es. Licenza media, Diploma di meccanico"')}
+          <div class="due">${campo("Dove",`formazione.${i}.dove`,f.dove,'placeholder="Es. Dakar, Senegal"')}${campo("Anno",`formazione.${i}.anno`,f.anno,'inputmode="numeric" maxlength="4"')}</div>${togliBtn("formazione", i)}</div>`).join("")}
+        <button class="btn ghost piccolo" type="button" data-agg="formazione">+ Aggiungi studio</button>
+        <p class="note">Un titolo preso all'estero si scrive lo stesso, indicando il paese.</p>
+        ${scelte("Corsi e attestati","corsi",CORSI,cv.corsi)}
+      </section>
+      <section class="card stack"><h2>5. Lingue</h2>
+        ${cv.lingue.map((l,i)=>`<div class="voce due">${campo("Lingua",`lingue.${i}.lingua`,l.lingua)}<label class="campo">Livello<select name="lingue.${i}.livello">${LIVELLI.map(x=>`<option ${x===l.livello?"selected":""}>${x}</option>`).join("")}</select></label>${togliBtn("lingue", i)}</div>`).join("")}
+        <button class="btn ghost piccolo" type="button" data-agg="lingue">+ Aggiungi lingua</button>
+      </section>
+      <section class="card stack"><h2>6. Punti di forza</h2>
+        ${scelte("Qualità","qualita",QUALITA,cv.qualita)}
+        ${areaTesto("Altro (facoltativo)","altro",cv.altro,'maxlength="300" placeholder="Es. Uso del computer di base, piccoli lavori di elettricità"')}
+      </section>
+      <button class="btn" type="submit">Vedi il CV e salva il PDF</button>
+    </form>
+    <div class="row"><button class="back" id="vai-cerca">Cerca annunci per questo lavoro ›</button><button class="back" id="cancella-cv">Cancella i dati</button></div>
+    <p class="note">Il CV resta solo in questa pagina: non viene salvato sul telefono né inviato a nessuno. Si cancella quando chiudi l'app, quando premi «Cancella i dati» o dopo 30 minuti in secondo piano.</p>`;
+
+  const f = document.getElementById("form-cv");
+  const aggiorna = () => { leggiForm(f, cv); cvToccato = true; };
+  document.getElementById("indietro").onclick = tornaLavoro;
+  f.oninput = e => {
+    aggiorna();
+    const m = (e.target.name||"").match(/^esperienze\.(\d+)\.ruolo$/);
+    if (m) f.querySelector(`[data-frasi="${m[1]}"]`).innerHTML = frasiPronte(e.target.value, +m[1]);
+  };
+  f.onchange = aggiorna;
+  f.onclick = e => {
+    const b = e.target.closest("button"); if (!b || b.type==="submit") return;
+    if (b.classList.contains("frase")){
+      const ta = f.querySelector(`[name="esperienze.${b.dataset.i}.attivita"]`);
+      const righe = ta.value.split("\n").map(s => s.trim()).filter(Boolean);
+      if (!righe.includes(b.textContent)) righe.push(b.textContent);
+      ta.value = righe.join("\n"); b.classList.add("usata"); aggiorna();
+    } else if (b.dataset.agg){
+      aggiorna(); const l = b.dataset.agg; cv[l].push(NUOVA_VOCE[l]()); renderCV();
+      const el = app.querySelector(`[name^="${l}.${cv[l].length-1}."]`); if (el) el.focus();
+    } else if (b.dataset.togli){
+      aggiorna(); const [l, i] = b.dataset.togli.split("."); cv[l].splice(+i, 1); renderCV();
+    } else if (b.id==="proponi"){
+      aggiorna();
+      if (cv.profilo.trim() && b.dataset.conferma!=="1"){ b.dataset.conferma = "1"; b.textContent = "Sostituire il testo già scritto? Tocca ancora"; return; }
+      f.querySelector('[name="profilo"]').value = proponiProfilo(); aggiorna();
+      b.dataset.conferma = ""; b.textContent = "Scrivi una proposta di presentazione"; avviso("Proposta scritta: correggila come serve");
+    }
+  };
+  f.onsubmit = e => { e.preventDefault(); aggiorna(); vai({tab:"lavoro", lavoro:"anteprima"}); };
+  document.getElementById("vai-cerca").onclick = () => { aggiorna(); ricerca.mansione = cv.obiettivo; vai({tab:"lavoro", lavoro:"cerca"}); };
+  const c = document.getElementById("cancella-cv");
+  c.onclick = () => {
+    if (c.dataset.conferma!=="1"){ c.dataset.conferma = "1"; c.textContent = "Conferma: cancella tutto"; return; }
+    cancellaCV(); avviso("Dati del CV cancellati"); renderCV(); scrollTo(0,0);
+  };
+}
+
+function proponiProfilo(){
+  const parti = [], lav = cv.obiettivo.trim();
+  const esp = [...new Set(cv.esperienze.map(e => e.ruolo.trim().toLowerCase()).filter(Boolean))];
+  if (lav) parti.push(`Cerco lavoro come ${lav.toLowerCase()}.`);
+  if (esp.length) parti.push(`Ho esperienza come ${elenco(esp)}.`);
+  const disp = cv.disponibilita.map(d => DISP_FRASE[d]).filter(Boolean);
+  if (disp.length) parti.push(`Sono disponibile ${elenco(disp)}.`);
+  if (cv.patente.length) parti.push(`Ho la patente ${cv.patente.join(", ")}${cv.auto?" e un'auto propria":""}.`);
+  parti.push("Ho voglia di imparare e di lavorare con impegno.");
+  return parti.join(" ");
+}
+
+// Il CV vero e proprio: stesso contenuto per l'anteprima, la stampa/PDF e il testo da copiare
+function datiCV(){
+  const s = x => (x||"").trim(), M = x => s(x).charAt(0).toUpperCase() + s(x).slice(1);
+  const periodo = e => s(e.dal) && s(e.al) ? `${s(e.dal)} – ${s(e.al)}` : s(e.dal) ? `Dal ${s(e.dal)}` : s(e.al);
+  return {
+    nome: [s(cv.nome), s(cv.cognome)].filter(Boolean).join(" ") || "Nome Cognome",
+    obiettivo: s(cv.obiettivo),
+    contatti: [s(cv.tel) && `Tel. ${s(cv.tel)}`, s(cv.email), s(cv.citta), s(cv.nascita) && `Anno di nascita: ${s(cv.nascita)}`].filter(Boolean),
+    profilo: s(cv.profilo),
+    esperienze: cv.esperienze.filter(e => s(e.ruolo) || s(e.dove)).map(e => ({ quando:periodo(e), titolo:M(e.ruolo), dove:s(e.dove), righe:e.attivita.split("\n").map(M).filter(Boolean) })),
+    formazione: cv.formazione.filter(f => s(f.titolo)).map(f => ({ quando:s(f.anno), titolo:M(f.titolo), dove:s(f.dove), righe:[] })),
+    corsi: cv.corsi,
+    lingue: cv.lingue.filter(l => s(l.lingua)).map(l => `${s(l.lingua)}: ${l.livello.toLowerCase()}`),
+    forza: [...cv.qualita, ...(s(cv.altro) ? [s(cv.altro)] : [])],
+    altro: [cv.patente.length && `Patente ${cv.patente.join(", ")}${cv.auto?", auto propria":""}`, cv.disponibilita.length && `Disponibilità: ${cv.disponibilita.join(", ").toLowerCase()}`].filter(Boolean),
+  };
+}
+const PRIVACY = "Autorizzo il trattamento dei dati personali contenuti nel curriculum vitae ai sensi del Regolamento UE 2016/679 (GDPR) e del D.Lgs. 196/2003.";
+
+function htmlCV(){
+  const d = datiCV();
+  const voci = l => l.map(v => `<div class="cv-voce"><div class="cv-quando">${esc(v.quando)}</div><div><b>${esc(v.titolo)}</b>${v.dove?` · ${esc(v.dove)}`:""}${v.righe.length?`<ul>${v.righe.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>`:""}</div></div>`).join("");
+  const sez = (t, corpo) => corpo ? `<section><h2>${t}</h2>${corpo}</section>` : "";
+  return `<header><h1>${esc(d.nome)}</h1>${d.obiettivo?`<p class="cv-ruolo">${esc(d.obiettivo)}</p>`:""}<p class="cv-contatti">${d.contatti.map(esc).join(" · ")}</p></header>
+    ${sez("Profilo", d.profilo && `<p>${esc(d.profilo)}</p>`)}
+    ${sez("Esperienze di lavoro", voci(d.esperienze))}
+    ${sez("Istruzione e formazione", voci(d.formazione) + (d.corsi.length?`<p><b>Corsi e attestati:</b> ${esc(d.corsi.join(", "))}</p>`:""))}
+    ${sez("Lingue", d.lingue.length && `<p>${esc(d.lingue.join(" · "))}</p>`)}
+    ${sez("Punti di forza", d.forza.length && `<p>${esc(d.forza.join(" · "))}</p>`)}
+    ${sez("Altre informazioni", d.altro.length && d.altro.map(x=>`<p>${esc(x)}</p>`).join(""))}
+    <p class="cv-privacy">${PRIVACY}</p>`;
+}
+function testoCV(){
+  const d = datiCV(), out = [d.nome.toUpperCase()];
+  if (d.obiettivo) out.push(d.obiettivo);
+  out.push(d.contatti.join(" · "));
+  const voci = l => l.map(v => [`- ${[v.quando, v.titolo, v.dove].filter(Boolean).join(", ")}`, ...v.righe.map(r => `  ${r}`)].join("\n")).join("\n");
+  const sez = (t, corpo) => { if (corpo) out.push("", t.toUpperCase(), corpo); };
+  sez("Profilo", d.profilo);
+  sez("Esperienze di lavoro", voci(d.esperienze));
+  sez("Istruzione e formazione", [voci(d.formazione), d.corsi.length ? "Corsi e attestati: " + d.corsi.join(", ") : ""].filter(Boolean).join("\n"));
+  sez("Lingue", d.lingue.join(" · "));
+  sez("Punti di forza", d.forza.join(" · "));
+  sez("Altre informazioni", d.altro.join("\n"));
+  out.push("", PRIVACY);
+  return out.join("\n");
+}
+function copiaTesto(testo, dopo, msg){
+  const fallback = () => { const t = document.createElement("textarea"); t.value = testo; t.className = "copia-testo"; dopo.after(t); t.select(); avviso("Seleziona e copia il testo"); };
+  navigator.clipboard ? navigator.clipboard.writeText(testo).then(() => avviso(msg), fallback) : fallback();
+}
+
+function renderAnteprima(){
+  app.innerHTML = `<div class="stack no-print"><button class="back" id="indietro">‹ Modifica il CV</button>
+      <div class="row" style="justify-content:flex-start"><button class="btn" id="stampa">Salva PDF o stampa</button><button class="btn ghost" id="copia-cv">Copia come testo</button></div>
+      <p class="note">Nella finestra di stampa scegli «Salva come PDF». Su iPhone tocca il tasto Condividi nella stampa e poi «Salva su File». Il testo copiato serve per i siti che chiedono di incollare il CV.</p></div>
+    <article class="cv-doc">${htmlCV()}</article>
+    <div class="stack no-print"><button class="btn ghost" id="vai-cerca">Ora cerca gli annunci ›</button>
+      <p class="note">Il PDF resta nei download del telefono: dopo averlo inviato o stampato, cancellalo.</p></div>`;
+  document.getElementById("indietro").onclick = () => (history.state && history.state.lavoro==="anteprima") ? history.back() : vai({tab:"lavoro", lavoro:"cv"});
+  document.getElementById("stampa").onclick = () => { document.title = "CV " + datiCV().nome; print(); };
+  const c = document.getElementById("copia-cv");
+  c.onclick = () => copiaTesto(testoCV(), c.parentNode, "CV copiato. Dopo l'uso copia altro testo per svuotare gli appunti.");
+  document.getElementById("vai-cerca").onclick = () => { ricerca.mansione = cv.obiettivo; vai({tab:"lavoro", lavoro:"cerca"}); };
+}
+
+// Ricerca annunci: dal lavoro cercato e dalla zona prepara la ricerca e i link già compilati per ogni sito
+function costruisciRicerca(){
+  const m = trovaMansione(ricerca.mansione), proprio = ricerca.mansione.trim();
+  const base = m ? m.cerca : proprio ? [proprio] : [];
+  const termini = [...new Set([...base, ...ricerca.altre.split(",").map(s => s.trim()).filter(Boolean)])];
+  const q = t => /\s/.test(t) ? `"${t}"` : t;
+  const piu = [], meno = [];
+  OPZIONI_RICERCA.filter(o => ricerca.opzioni.includes(o.t)).forEach(o => { piu.push(...(o.piu||[])); meno.push(...(o.meno||[])); });
+  const alternative = termini.length > 1 ? `(${termini.map(q).join(" OR ")})` : termini.map(q).join("");
+  return { termini, semplice:termini[0]||"", booleana:[alternative, ...piu.map(q)].join(" ").trim(), meno };
+}
+function linkRicerca(r){
+  const E = encodeURIComponent, dove = ricerca.dove.trim() || "Vercelli", km = +ricerca.raggio || 25;
+  const conMeno = (s, no="-") => [s, ...r.meno.map(t => no + t)].join(" ");
+  const google = s => "https://www.google.com/search?q=" + E(s);
+  const miglia = { 10:5, 25:10, 50:25, 100:50 }[km] || 25;   // LinkedIn misura la distanza in miglia
+  return [
+    { gruppo:"Siti di annunci", voci:[
+      { t:"Indeed", d:"Il sito con più annunci in Italia. Per molti ci si candida con il CV in PDF.", u:`https://it.indeed.com/jobs?q=${E(conMeno(r.booleana))}&l=${E(dove)}&radius=${km}&sort=date` },
+      { t:"Google", d:"Cerca gli annunci su tanti siti insieme, compresi quelli piccoli.", u:google(conMeno(`offerta lavoro ${r.booleana} ${dove}`)) },
+      { t:"LinkedIn", d:"Utile per aziende e agenzie. Per candidarsi serve un profilo LinkedIn.", u:`https://www.linkedin.com/jobs/search/?keywords=${E(conMeno(r.booleana, "NOT "))}&location=${E(dove + ", Piemonte, Italia")}&distance=${miglia}&sortBy=DD` },
+      { t:"InfoJobs", d:"Ricerca con Google tra gli annunci di InfoJobs.", u:google(conMeno(`site:infojobs.it ${r.booleana} ${dove}`)) },
+      { t:"Subito", d:"Annunci di privati e piccole aziende: lavori in casa, stagionali, ristorazione.", u:google(conMeno(`site:subito.it ${r.booleana} ${dove}`)) },
+    ]},
+    { gruppo:"Agenzie per il lavoro", voci:[
+      { t:"Randstad, Adecco, Gi Group, Manpower, Umana, Openjobmetis", d:"Molte offerte di magazzino, produzione e pulizie passano dalle agenzie. Conviene anche portare il CV di persona nelle filiali.", u:google(conMeno(`(site:randstad.it OR site:adecco.it OR site:gigroup.it OR site:manpower.it OR site:umana.it OR site:openjobmetis.it) ${r.booleana} ${dove}`)) },
+    ]},
+    { gruppo:"Portali pubblici", voci:[
+      { t:"Piattaforma Servizi Lavoro Piemonte", d:`Gli annunci dei Centri per l'impiego e delle agenzie del Piemonte. Apri «Incontro domanda offerta» e cerca «${r.semplice}».`, u:"https://pslp.regione.piemonte.it/" },
+      { t:"SIISL", d:`La piattaforma del Ministero del Lavoro e dell'INPS, usata anche per l'Assegno di inclusione e il Supporto formazione e lavoro. Cerca «${r.semplice}».`, u:"https://siisl.lavoro.gov.it/" },
+    ]},
+  ];
+}
+
+function renderCerca(){
+  app.innerHTML = `<button class="back" id="indietro">‹ Indietro</button>
+    <div class="stack"><span class="eyebrow">Lavoro</span><h1>Cerca annunci</h1>
+      <p class="muted">Scegli il lavoro e la zona: l'app prepara le parole di ricerca e i link già compilati. La candidatura si fa sul sito dell'annuncio.</p></div>
+    <form class="card stack" id="form-cerca" autocomplete="off">${listaMansioni()}
+      ${campo("Lavoro cercato","mansione",ricerca.mansione,'list="mansioni" placeholder="Scegli o scrivi, es. Magazziniere"')}
+      ${campo("Altre parole (facoltativo)","altre",ricerca.altre,'placeholder="Es. carrellista, picking"',"Separate da una virgola: vanno bene anche una o l'altra.")}
+      <div class="due">${campo("Dove","dove",ricerca.dove)}<label class="campo">Distanza<select name="raggio">${[10,25,50,100].map(k=>`<option value="${k}" ${+ricerca.raggio===k?"selected":""}>Entro ${k} km</option>`).join("")}</select></label></div>
+      ${scelte("Filtri","opzioni",OPZIONI_RICERCA.map(o=>o.t),ricerca.opzioni)}
+    </form>
+    <div class="stack" id="esito"></div>`;
+  const f = document.getElementById("form-cerca");
+  document.getElementById("indietro").onclick = tornaLavoro;
+  f.oninput = f.onchange = () => { leggiForm(f, ricerca); mostraEsito(); };
+  f.onsubmit = e => e.preventDefault();
+  mostraEsito();
+}
+function mostraEsito(){
+  const box = document.getElementById("esito"), r = costruisciRicerca();
+  if (!r.termini.length){ box.innerHTML = `<div class="card"><p class="muted">Scrivi o scegli il lavoro cercato: qui compaiono le ricerche pronte.</p></div>`; return; }
+  const testo = [r.booleana, ...r.meno.map(t => "-" + t)].join(" ");
+  box.innerHTML = `<div class="card stack" style="gap:10px"><span class="eyebrow">Parole di ricerca</span><p class="query">${esc(testo)}</p>
+      <div class="row" style="justify-content:flex-start"><button class="btn piccolo" id="copia-q">Copia</button></div>
+      <p class="note">Si può incollare così com'è su Indeed, Google e LinkedIn. Sui siti che non la accettano basta scrivere «${esc(r.semplice)}».</p></div>
+    ${linkRicerca(r).map(g => `<section class="stack"><h2>${esc(g.gruppo)}</h2>${g.voci.map(v => `<a class="card" href="${esc(v.u)}" target="_blank" rel="noopener noreferrer"><h3>${esc(v.t)}</h3><p class="muted">${esc(v.d)}</p><span class="apri">Apri la ricerca ↗</span></a>`).join("")}</section>`).join("")}
+    <section class="card"><h3>Per candidarsi bene</h3><ol class="passi">
+      <li>Se mancano uno o due requisiti, candidarsi lo stesso: gli annunci chiedono spesso più del necessario.</li>
+      <li>Allegare il CV in PDF e, se c'è un campo libero, scrivere due righe su perché quel lavoro va bene.</li>
+      <li>Molti annunci chiedono di telefonare: preparare prima una breve presentazione e avere carta e penna.</li>
+      <li>Annotare dove ci si è candidati, per riconoscere chi richiama.</li>
+      <li>Diffidare di chi chiede soldi, un corso a pagamento o documenti prima del colloquio: un lavoro vero non si paga.</li>
+    </ol></section>`;
+  const c = document.getElementById("copia-q");
+  c.onclick = () => copiaTesto(testo, c.parentNode, "Ricerca copiata");
+}
+
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{ if (b.dataset.tab!==vista.tab || profondita(vista)) vai({tab:b.dataset.tab}); });
-const h = location.hash.slice(1); if (["home","servizi","notizie","materiali"].includes(h)) vista.tab=h;
+const h = location.hash.slice(1); if (["home","servizi","notizie","materiali","lavoro"].includes(h)) vista.tab=h;
 try { history.replaceState(vista,""); } catch(e){}
 render();
 if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));
