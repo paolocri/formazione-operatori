@@ -15,6 +15,11 @@ Questa cartella contiene l'app pronta per essere messa online come web app insta
 3. Vai in Settings → Pages, scegli "Deploy from a branch", branch `main`, cartella `/ (root)`.
 4. Dopo un minuto l'app è su `https://<tuo-utente>.github.io/formazione-operatori/`.
 
+## Installarla sul Mac
+- **Safari** (macOS 14 o successivo): apri il link, menu File → "Aggiungi al Dock".
+- **Chrome**: apri il link, icona di installazione nella barra degli indirizzi oppure menu ⋮ → "Trasmetti, salva e condividi" → "Installa pagina come app".
+Sugli schermi larghi il menu passa a sinistra e le pagine del CV e della ricerca annunci si dividono in due colonne. I dati (passaggi e CV) restano sul dispositivo dove sono stati inseriti: Mac e telefono non si sincronizzano.
+
 ## Installarla sul telefono
 - **Android (Chrome)**: apri il link, menu ⋮ → "Installa app".
 - **iPhone (Safari)**: apri il link, Condividi → "Aggiungi alla schermata Home".

@@ -211,6 +211,31 @@ html[data-dir="indietro"]{--vt-out:18px;--vt-in:-18px}
   .cv-doc{border:0;box-shadow:none;padding:0;border-radius:0;font-size:10.5pt}
   .cv-voce{grid-template-columns:28mm 1fr}
 }
+/* Schermi larghi (Mac, tablet in orizzontale): menu a sinistra, contenuti più larghi, liste e pagine del lavoro su due colonne */
+.affianca{display:grid;gap:22px}
+.laterale{display:none}
+@media (min-width:900px){
+  :root{--lato:224px}
+  body{padding-left:var(--lato)}
+  .topbar{margin-left:calc(-1 * var(--lato))}
+  .topbar .gutter{max-width:none;padding-left:24px}
+  nav.tabs{top:0;right:auto;bottom:0;width:var(--lato);box-sizing:border-box;grid-template-columns:1fr;align-content:start;gap:4px;padding:76px 12px 16px;border-top:0;border-right:1px solid var(--line)}
+  nav.tabs button{grid-auto-flow:column;justify-content:start;align-items:center;gap:12px;font-size:1rem;padding:10px 14px;border-top:0;border-radius:10px}
+  nav.tabs button:hover{background:var(--bg);color:var(--ink)}
+  nav.tabs button[aria-current="true"]{background:var(--red-soft);color:var(--red)}
+  .gutter{max-width:760px;padding-left:32px;padding-right:32px}
+  .wrap{padding-block:28px 48px}
+  #app.largo{max-width:1240px}
+  .griglia{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+  .avviso{bottom:24px;left:calc(50% + var(--lato) / 2)}
+}
+@media (min-width:1100px){
+  .affianca{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+  .laterale{display:grid;gap:10px;position:sticky;top:76px;max-height:calc(100vh - 96px);overflow:auto;overscroll-behavior:contain}
+  .laterale .cv-doc{font-size:12.5px;padding:24px 22px}
+  .affianca .fisso{position:sticky;top:76px}
+}
+@media print{body{padding-left:0!important}.topbar{margin-left:0!important}}
 </style>
 
 
@@ -436,6 +461,7 @@ function render(){
   if (vista.servizio) return renderServizio();
   if (vista.area) return renderPassaggi();
   document.title = TITOLO;
+  app.classList.toggle("largo", vista.lavoro==="cv" || vista.lavoro==="cerca");
   if (vista.lavoro) return ({cv:renderCV, anteprima:renderAnteprima, cerca:renderCerca, salvati:renderSalvati})[vista.lavoro]();
   ({home:renderHome, servizi:renderServizi, notizie:renderNotizie, materiali:renderLista, lavoro:renderLavoro})[vista.tab]();
 }
@@ -484,7 +510,7 @@ function collegaServizi(){
 function renderServizi(){
   app.innerHTML = `<div class="stack"><span class="eyebrow">${esc(SEDE.sotto)}</span><h1>Servizi</h1>
     <p class="muted">I servizi della ${esc(SEDE.nome)} a Vercelli, con indirizzi, orari e come accedere.</p></div>
-    <div class="stack">${SERVIZI.map(s=>`<button class="card mod" data-serv="${s.id}">
+    <div class="stack griglia">${SERVIZI.map(s=>`<button class="card mod" data-serv="${s.id}">
       <span class="ico"><svg viewBox="0 0 24 24">${s.icona}</svg></span>
       <div><h3>${esc(s.titolo)}</h3><p class="muted">${esc(s.sotto)}</p></div></button>`).join("")}</div>
     <section class="stack"><div class="stack" style="gap:4px"><span class="eyebrow">Per l'operatore</span><h2>Dove indirizzare una persona</h2></div>
@@ -528,7 +554,7 @@ function renderCentri(){
 
 
 // Area operatore: passaggi annotati al volo, da riportare poi in Matrioska.
-// I dati restano SOLO su questo telefono, cifrati (AES-GCM) con una chiave ricavata dal PIN (PBKDF2).
+// I dati restano SOLO su questo dispositivo, cifrati (AES-GCM) con una chiave ricavata dal PIN (PBKDF2).
 // La chiave vive solo in memoria finché l'area è aperta: a riposo si legge solo testo cifrato.
 const INTERVENTI = ["Ascolto","Emporio / viveri","Vestiario","Orientamento ai servizi","Utenze / affitto","Lavoro","Altro"];
 const CHIAVE_DATI = "passaggi-cifrati", CHIAVE_TENT = "passaggi-tentativi", CHIAVE_N = "passaggi-da-inserire", CHIAVE_CENTRO = "passaggi-centro";
@@ -603,7 +629,7 @@ function renderPassaggi(){
       ${daInserire.length ? daInserire.map(cardPassaggio).join("") : '<div class="card"><p class="muted">Nessun passaggio da inserire. Quelli che salvi compaiono qui.</p></div>'}
     </section>
     ${inseriti.length?`<details class="stack"><summary>Già inseriti (${inseriti.length}) · si cancellano dopo ${GIORNI_DOPO_INSERIMENTO} giorni</summary><div class="stack">${inseriti.map(cardPassaggio).join("")}</div></details>`:""}
-    <p class="note">I passaggi restano solo su questo telefono, cifrati con il tuo PIN, e non vengono inviati a nessuno. Dopo ${MAX_TENTATIVI} PIN sbagliati si cancellano. Se cambi telefono o cancelli i dati del browser, quelli non ancora inseriti vanno persi.</p>
+    <p class="note">I passaggi restano solo su questo dispositivo, cifrati con il tuo PIN, e non vengono inviati a nessuno. Dopo ${MAX_TENTATIVI} PIN sbagliati si cancellano. Se cambi telefono o cancelli i dati del browser, quelli non ancora inseriti vanno persi.</p>
     <button class="back" id="blocca">Chiudi l'area operatore</button>`;
 
   document.getElementById("indietro").onclick = () => { chiudiArea(); tornaIndietro(); };
@@ -660,7 +686,7 @@ function renderPin(dopo = render, annulla = tornaIndietro){
   const rimasti = MAX_TENTATIVI - leggi(CHIAVE_TENT, 0);
   app.innerHTML = `<button class="back" id="indietro">‹ Indietro</button>
     <div class="stack"><span class="eyebrow">Area operatore</span><h1>${nuovo?"Crea il tuo PIN":"Inserisci il PIN"}</h1>
-    <p class="muted">${nuovo?"Scegli un PIN di 6 cifre, diverso da quello del telefono. Serve a cifrare i passaggi e i CV: senza PIN nessuno può leggerli, nemmeno tu.":"I passaggi e i CV su questo telefono sono cifrati con il tuo PIN."}</p></div>
+    <p class="muted">${nuovo?"Scegli un PIN di 6 cifre, diverso da quello del telefono. Serve a cifrare i passaggi e i CV: senza PIN nessuno può leggerli, nemmeno tu.":"I passaggi e i CV su questo dispositivo sono cifrati con il tuo PIN."}</p></div>
     <form class="card stack" id="form-pin">
       <input class="pin" id="pin" type="password" inputmode="numeric" pattern="${nuovo?"[0-9]{6}":"[0-9]{4,6}"}" maxlength="6" autocomplete="off" required aria-label="PIN">
       ${nuovo?'<input class="pin" id="pin2" type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" required aria-label="Ripeti il PIN" placeholder="Ripeti">':""}
@@ -741,7 +767,7 @@ function mostraNotizie(){
 function renderNotizie(){
   app.innerHTML = `<div class="stack"><span class="eyebrow">Dalla rete Caritas</span><h1>Notizie</h1>
     <p class="muted">Le ultime notizie pubblicate da Caritas Italiana, aggiornate ogni giorno.</p><p class="note" id="agg-notizie"></p></div>
-    <div class="stack" id="box-notizie"></div>`;
+    <div class="stack griglia" id="box-notizie"></div>`;
   mostraNotizie();
 }
 
@@ -818,6 +844,7 @@ document.addEventListener("visibilitychange", () => {
 });
 addEventListener("beforeunload", e => { if (cvToccato) { e.preventDefault(); e.returnValue = ""; } });
 addEventListener("afterprint", () => document.title = TITOLO);
+addEventListener("resize", () => { const l = document.getElementById("cv-live"); if (l && l.offsetParent) l.innerHTML = htmlCV(); });
 
 // Legge i campi di un modulo dentro un oggetto: name="esperienze.0.ruolo" → obj.esperienze[0].ruolo; i gruppi di chip vanno in liste
 function leggiForm(f, obj){
@@ -884,14 +911,14 @@ function renderSalvati(){
   const quando = t => new Date(t).toLocaleDateString("it-IT", { day:"numeric", month:"long", year:"numeric" });
   app.innerHTML = `<button class="back" id="indietro">‹ Indietro</button>
     <div class="stack"><span class="eyebrow">Lavoro · area protetta</span><h1>CV salvati</h1>
-      <p class="muted">Cifrati con il tuo PIN e salvati solo su questo telefono.</p></div>
+      <p class="muted">Cifrati con il tuo PIN e salvati solo su questo dispositivo.</p></div>
     ${cvToccato?`<div class="callout">Hai un CV aperto con modifiche non salvate. Se ne apri un altro, le perdi.</div>`:""}
     <div class="stack">${lista.length ? lista.map(x => `<div class="card">
         <div class="row"><h3>${esc([x.cv.nome, x.cv.cognome].join(" ").trim() || "Senza nome")}</h3>${x.id===cvId?'<span class="tag ok">Aperto</span>':""}</div>
         ${x.cv.obiettivo?`<p class="muted">${esc(x.cv.obiettivo)}</p>`:""}
         <p class="note">Salvato il ${quando(x.salvato)} · si cancella il ${quando(x.salvato + GIORNI_CV*24*3600*1000)} se non lo modifichi</p>
         <div class="row" style="justify-content:flex-start"><button class="btn piccolo" data-apri="${x.id}">Apri</button><button class="back" data-elimina="${x.id}">Elimina</button></div>
-      </div>`).join("") : `<div class="card"><p class="muted">Nessun CV salvato. Crea un CV e premi «Salva cifrato sul telefono».</p></div>`}</div>
+      </div>`).join("") : `<div class="card"><p class="muted">Nessun CV salvato. Crea un CV e premi «Salva cifrato».</p></div>`}</div>
     <button class="btn ghost" id="nuovo-cv">+ Nuovo CV</button>
     <p class="note">Un CV non modificato da ${GIORNI_CV} giorni si cancella da solo. Dopo ${MAX_TENTATIVI} PIN sbagliati si cancellano passaggi e CV. Se cambi telefono o cancelli i dati del browser, i CV salvati vanno persi: conserva il PDF dove serve.</p>
     <button class="back" id="blocca">Chiudi l'area protetta</button>`;
@@ -929,7 +956,7 @@ function renderLavoro(){
       <li>Il CV non dice che la persona è seguita dalla Caritas: è un CV come tutti gli altri.</li>
       <li>Contano anche i lavori senza contratto, quelli fatti all'estero e il volontariato.</li>
     </ol></section>
-    <p class="note">Un CV non salvato resta solo in questa pagina. Quelli salvati sono cifrati con il tuo PIN e restano solo su questo telefono: non vengono mai inviati a nessuno.</p>`;
+    <p class="note">Un CV non salvato resta solo in questa pagina. Quelli salvati sono cifrati con il tuo PIN e restano solo su questo dispositivo: non vengono mai inviati a nessuno.</p>`;
   document.getElementById("vai-salvati").onclick = () => vai({tab:"lavoro", lavoro:"salvati"});
   document.getElementById("vai-cv").onclick = () => vai({tab:"lavoro", lavoro:"cv"});
   document.getElementById("vai-cerca").onclick = () => vai({tab:"lavoro", lavoro:"cerca"});
@@ -954,7 +981,7 @@ function renderCV(){
   app.innerHTML = `<button class="back" id="indietro">‹ Indietro</button>
     <div class="stack"><span class="eyebrow">Lavoro</span><h1>Crea un CV</h1>
       <p class="muted">Compila solo quello che serve: i campi vuoti non compaiono nel CV.</p></div>
-    <form class="stack" id="form-cv" autocomplete="off">${listaMansioni()}
+    <div class="affianca"><form class="stack" id="form-cv" autocomplete="off">${listaMansioni()}
       <section class="card stack"><h2>1. Chi è</h2>
         <div class="due">${campo("Nome","nome",cv.nome,'autocapitalize="words" required')}${campo("Cognome","cognome",cv.cognome,'autocapitalize="words"')}</div>
         ${campo("Telefono","tel",cv.tel,'type="tel" inputmode="tel"')}
@@ -991,15 +1018,19 @@ function renderCV(){
         ${areaTesto("Altro (facoltativo)","altro",cv.altro,'maxlength="300" placeholder="Es. Uso del computer di base, piccoli lavori di elettricità"')}
       </section>
       <button class="btn" type="submit">Vedi il CV e salva il PDF</button>
-      <button class="btn ghost" type="button" id="salva-cv">Salva cifrato sul telefono</button>
-      <p class="note" id="stato-cv">${cvId ? (cvToccato ? "Ci sono modifiche non salvate." : "Salvato e cifrato su questo telefono.") : "Non ancora salvato."}</p>
+      <button class="btn ghost" type="button" id="salva-cv">Salva cifrato</button>
+      <p class="note" id="stato-cv">${cvId ? (cvToccato ? "Ci sono modifiche non salvate." : "Salvato e cifrato su questo dispositivo.") : "Non ancora salvato."}</p>
     </form>
+    <aside class="laterale" aria-label="Anteprima del CV"><span class="eyebrow">Anteprima, si aggiorna mentre scrivi</span><article class="cv-doc" id="cv-live"></article></aside></div>
     <div class="row"><button class="back" id="vai-cerca">Cerca annunci per questo lavoro ›</button><button class="back" id="cancella-cv">${cvId?"Chiudi questo CV":"Cancella i dati"}</button></div>
     <p class="note">${cvId ? "La copia salvata è cifrata con il tuo PIN. «Chiudi questo CV» la toglie solo dalla pagina: resta tra i CV salvati." : "Finché non lo salvi, il CV resta solo in questa pagina e si cancella quando chiudi l'app, quando premi «Cancella i dati» o dopo 30 minuti in secondo piano."}</p>`;
 
   const f = document.getElementById("form-cv");
   const stato = document.getElementById("stato-cv");
-  const aggiorna = () => { leggiForm(f, cv); cvToccato = true; if (cvId) stato.textContent = "Ci sono modifiche non salvate."; };
+  const live = document.getElementById("cv-live");
+  const anteprimaLive = () => { if (live.offsetParent) live.innerHTML = htmlCV(); };   // solo se visibile (schermi larghi)
+  const aggiorna = () => { leggiForm(f, cv); cvToccato = true; if (cvId) stato.textContent = "Ci sono modifiche non salvate."; anteprimaLive(); };
+  anteprimaLive();
   document.getElementById("indietro").onclick = tornaLavoro;
   f.oninput = e => {
     aggiorna();
@@ -1161,13 +1192,13 @@ function renderCerca(){
   app.innerHTML = `<button class="back" id="indietro">‹ Indietro</button>
     <div class="stack"><span class="eyebrow">Lavoro</span><h1>Cerca annunci</h1>
       <p class="muted">Scegli il lavoro e la zona: l'app prepara le parole di ricerca e i link già compilati. La candidatura si fa sul sito dell'annuncio.</p></div>
-    <form class="card stack" id="form-cerca" autocomplete="off">${listaMansioni()}
+    <div class="affianca"><form class="card stack fisso" id="form-cerca" autocomplete="off">${listaMansioni()}
       ${campo("Lavoro cercato","mansione",ricerca.mansione,'list="mansioni" placeholder="Scegli o scrivi, es. Magazziniere"')}
       ${campo("Altre parole (facoltativo)","altre",ricerca.altre,'placeholder="Es. carrellista, picking"',"Separate da una virgola: vanno bene anche una o l'altra.")}
       <div class="due">${campo("Dove","dove",ricerca.dove)}<label class="campo">Distanza<select name="raggio">${[10,25,50,100].map(k=>`<option value="${k}" ${+ricerca.raggio===k?"selected":""}>Entro ${k} km</option>`).join("")}</select></label></div>
       ${scelte("Filtri","opzioni",OPZIONI_RICERCA.map(o=>o.t),ricerca.opzioni)}
     </form>
-    <div class="stack" id="esito"></div>`;
+    <div class="stack" id="esito"></div></div>`;
   const f = document.getElementById("form-cerca");
   document.getElementById("indietro").onclick = tornaLavoro;
   f.oninput = f.onchange = () => { leggiForm(f, ricerca); mostraEsito(); };
