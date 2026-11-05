@@ -436,7 +436,7 @@ function render(){
   if (vista.servizio) return renderServizio();
   if (vista.area) return renderPassaggi();
   document.title = TITOLO;
-  if (vista.lavoro) return ({cv:renderCV, anteprima:renderAnteprima, cerca:renderCerca})[vista.lavoro]();
+  if (vista.lavoro) return ({cv:renderCV, anteprima:renderAnteprima, cerca:renderCerca, salvati:renderSalvati})[vista.lavoro]();
   ({home:renderHome, servizi:renderServizi, notizie:renderNotizie, materiali:renderLista, lavoro:renderLavoro})[vista.tab]();
 }
 
@@ -533,6 +533,7 @@ function renderCentri(){
 const INTERVENTI = ["Ascolto","Emporio / viveri","Vestiario","Orientamento ai servizi","Utenze / affitto","Lavoro","Altro"];
 const CHIAVE_DATI = "passaggi-cifrati", CHIAVE_TENT = "passaggi-tentativi", CHIAVE_N = "passaggi-da-inserire", CHIAVE_CENTRO = "passaggi-centro";
 const VECCHIE = ["passaggi-v1","passaggi-pin"];   // versione senza cifratura, migrata al primo accesso
+const CHIAVE_CV = "cv-cifrati", CHIAVE_CV_N = "cv-salvati-n", GIORNI_CV = 90;   // CV salvati: stessa chiave dei passaggi
 const MAX_TENTATIVI = 5, BLOCCO_MS = 10*60*1000, GIORNI_DOPO_INSERIMENTO = 7;
 const leggi = (k, d) => { try { const v = localStorage.getItem(k); return v==null ? d : JSON.parse(v); } catch(e){ return d; } };
 const scrivi = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(e){ return false; } };
@@ -556,13 +557,13 @@ async function salvaPassaggi(){
   scrivi(CHIAVE_N, passaggi.filter(p => !p.inserito).length);
   return ok;
 }
-function chiudiArea(){ chiave = null; passaggi = null; }
-function cancellaTutto(){ [CHIAVE_DATI, CHIAVE_TENT, CHIAVE_N, ...VECCHIE].forEach(togli); chiudiArea(); }
+function chiudiArea(){ chiave = null; passaggi = null; cvSalvati = null; }
+function cancellaTutto(){ [CHIAVE_DATI, CHIAVE_TENT, CHIAVE_N, CHIAVE_CV, CHIAVE_CV_N, ...VECCHIE].forEach(togli); chiudiArea(); }
 
 // Si richiude da sola dopo 10 minuti di inattività o 5 minuti con l'app in secondo piano
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) { nascostoDa = Date.now(); return; }
-  if (chiave && Date.now() - nascostoDa > 5*60*1000) { chiudiArea(); if (vista.area) render(); }
+  if (chiave && Date.now() - nascostoDa > 5*60*1000) { chiudiArea(); if (vista.area || vista.lavoro==="salvati") render(); }
 });
 
 function avviso(t){
@@ -654,24 +655,24 @@ function cardPassaggio(p){
     </div></div>`;
 }
 
-function renderPin(){
+function renderPin(dopo = render, annulla = tornaIndietro){
   const rec = leggi(CHIAVE_DATI, null), vecchioPin = leggi("passaggi-pin", null), nuovo = !rec && !vecchioPin;
   const rimasti = MAX_TENTATIVI - leggi(CHIAVE_TENT, 0);
   app.innerHTML = `<button class="back" id="indietro">‹ Indietro</button>
     <div class="stack"><span class="eyebrow">Area operatore</span><h1>${nuovo?"Crea il tuo PIN":"Inserisci il PIN"}</h1>
-    <p class="muted">${nuovo?"Scegli un PIN di 6 cifre, diverso da quello del telefono. Serve a cifrare i passaggi: senza PIN nessuno può leggerli, nemmeno tu.":"I passaggi su questo telefono sono cifrati con il tuo PIN."}</p></div>
+    <p class="muted">${nuovo?"Scegli un PIN di 6 cifre, diverso da quello del telefono. Serve a cifrare i passaggi e i CV: senza PIN nessuno può leggerli, nemmeno tu.":"I passaggi e i CV su questo telefono sono cifrati con il tuo PIN."}</p></div>
     <form class="card stack" id="form-pin">
       <input class="pin" id="pin" type="password" inputmode="numeric" pattern="${nuovo?"[0-9]{6}":"[0-9]{4,6}"}" maxlength="6" autocomplete="off" required aria-label="PIN">
       ${nuovo?'<input class="pin" id="pin2" type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" required aria-label="Ripeti il PIN" placeholder="Ripeti">':""}
       <p class="errore" id="err" aria-live="polite">${!nuovo && rimasti<MAX_TENTATIVI?`Tentativi rimasti: ${rimasti}`:""}</p>
       <button class="btn" type="submit" id="pin-ok">${nuovo?"Salva PIN":"Apri"}</button>
     </form>
-    ${nuovo?"":`<div class="stack"><button class="back" id="reset">Ho dimenticato il PIN</button><p class="note" id="reset-info" hidden>Il PIN non si può recuperare: è l'unica chiave dei dati. Puoi solo cancellare i passaggi salvati e crearne uno nuovo. <button class="back" id="reset-ok">Cancella tutto e ricomincia</button></p></div>`}`;
-  document.getElementById("indietro").onclick = tornaIndietro;
+    ${nuovo?"":`<div class="stack"><button class="back" id="reset">Ho dimenticato il PIN</button><p class="note" id="reset-info" hidden>Il PIN non si può recuperare: è l'unica chiave dei dati. Puoi solo cancellare i passaggi e i CV salvati e crearne uno nuovo. <button class="back" id="reset-ok">Cancella tutto e ricomincia</button></p></div>`}`;
+  document.getElementById("indietro").onclick = annulla;
   document.getElementById("pin").focus();
   const r = document.getElementById("reset");
   if (r) { r.onclick = () => document.getElementById("reset-info").hidden = false;
-    document.getElementById("reset-ok").onclick = () => { cancellaTutto(); avviso("Area passaggi azzerata"); renderPin(); }; }
+    document.getElementById("reset-ok").onclick = () => { cancellaTutto(); avviso("Passaggi e CV salvati cancellati"); renderPin(dopo, annulla); }; }
   document.getElementById("form-pin").onsubmit = async e => {
     e.preventDefault();
     const pin = document.getElementById("pin").value, err = document.getElementById("err"), btn = document.getElementById("pin-ok");
@@ -695,10 +696,10 @@ function renderPin(){
         const dati = await crypto.subtle.decrypt({ name:"AES-GCM", iv:daB64(rec.iv) }, k, daB64(rec.ct));
         chiave = k; passaggi = JSON.parse(new TextDecoder().decode(dati));
       }
-      togli(CHIAVE_TENT); ultimoUso = Date.now(); renderPassaggi();
+      togli(CHIAVE_TENT); ultimoUso = Date.now(); dopo();
     } catch(x) {
       const n = leggi(CHIAVE_TENT, 0) + 1;
-      if (n >= MAX_TENTATIVI){ cancellaTutto(); avviso("Troppi tentativi: i passaggi sono stati cancellati"); return renderPin(); }
+      if (n >= MAX_TENTATIVI){ cancellaTutto(); avviso("Troppi tentativi: passaggi e CV salvati sono stati cancellati"); return renderPin(dopo, annulla); }
       scrivi(CHIAVE_TENT, n); document.getElementById("pin").value = "";
       err.textContent = `PIN non corretto. Tentativi rimasti: ${MAX_TENTATIVI - n}`;
     } finally { btn.disabled = false; }
@@ -805,14 +806,15 @@ const cvVuoto = () => ({ nome:"", cognome:"", tel:"", email:"", citta:"", nascit
   esperienze:[{ ruolo:"", dove:"", dal:"", al:"", attivita:"" }], formazione:[{ titolo:"", dove:"", anno:"" }], lingue:[{ lingua:"Italiano", livello:"Buono" }],
   corsi:[], qualita:[], altro:"" });
 const NUOVA_VOCE = { esperienze:() => ({ ruolo:"", dove:"", dal:"", al:"", attivita:"" }), formazione:() => ({ titolo:"", dove:"", anno:"" }), lingue:() => ({ lingua:"", livello:"Buono" }) };
-let cv = cvVuoto(), cvToccato = false, cvNascostoDa = 0;
+let cv = cvVuoto(), cvToccato = false, cvNascostoDa = 0, cvId = null, cvSalvati = null;   // cvToccato = modifiche non ancora salvate
 let ricerca = { mansione:"", altre:"", dove:"Vercelli", raggio:"25", opzioni:[] };
 const TITOLO = document.title;
 
-function cancellaCV(){ cv = cvVuoto(); cvToccato = false; }
+function cancellaCV(){ cv = cvVuoto(); cvToccato = false; cvId = null; }
+const cvInMemoria = () => cvToccato || !!cvId;
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) { cvNascostoDa = Date.now(); return; }
-  if (cvToccato && Date.now() - cvNascostoDa > 30*60*1000) { cancellaCV(); if (vista.tab==="lavoro") render(); avviso("Dati del CV cancellati dopo 30 minuti"); }
+  if (cvInMemoria() && Date.now() - cvNascostoDa > 30*60*1000) { cancellaCV(); if (vista.tab==="lavoro") render(); avviso("CV chiuso dopo 30 minuti: le modifiche non salvate sono perse"); }
 });
 addEventListener("beforeunload", e => { if (cvToccato) { e.preventDefault(); e.returnValue = ""; } });
 addEventListener("afterprint", () => document.title = TITOLO);
@@ -841,11 +843,84 @@ function trovaMansione(testo){
     MANSIONI.find(m => m.cerca.some(c => { c = c.toLowerCase(); return c.length > 4 ? t.includes(c) : parole.includes(c); }));
 }
 
+// CV salvati: un unico blocco cifrato (AES-GCM) con la chiave dei passaggi, quindi con lo stesso PIN.
+// Fuori dal blocco resta solo il numero dei CV. Un CV non modificato da 90 giorni si cancella.
+const chiaveAperta = () => chiave && Date.now() - ultimoUso <= BLOCCO_MS;
+async function leggiCVcifrati(){
+  const rec = leggi(CHIAVE_CV, null); if (!rec) return [];
+  const dati = await crypto.subtle.decrypt({ name:"AES-GCM", iv:daB64(rec.iv) }, chiave, daB64(rec.ct));
+  return JSON.parse(new TextDecoder().decode(dati));
+}
+async function scriviCVcifrati(){
+  const limite = Date.now() - GIORNI_CV*24*3600*1000;
+  cvSalvati = cvSalvati.filter(x => x.salvato > limite);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = new Uint8Array(await crypto.subtle.encrypt({ name:"AES-GCM", iv }, chiave, new TextEncoder().encode(JSON.stringify(cvSalvati))));
+  const ok = cvSalvati.length ? scrivi(CHIAVE_CV, { v:1, iv:b64(iv), ct:b64(ct) }) : (togli(CHIAVE_CV), true);
+  scrivi(CHIAVE_CV_N, cvSalvati.length); ultimoUso = Date.now();
+  return ok;
+}
+async function apriCVsalvati(){
+  if (cvSalvati) return;
+  try { cvSalvati = await leggiCVcifrati(); }
+  catch(e){ cvSalvati = []; avviso("Non riesco a leggere i CV salvati"); }
+  if (cvSalvati.length !== leggi(CHIAVE_CV_N, 0)) await scriviCVcifrati();   // toglie quelli scaduti
+}
+async function salvaCVcifrato(){
+  await apriCVsalvati();
+  const copia = JSON.parse(JSON.stringify(cv)), ora = Date.now();
+  const voce = cvId && cvSalvati.find(x => x.id === cvId);
+  if (voce){ voce.cv = copia; voce.salvato = ora; }
+  else { cvId = ora.toString(36) + Math.random().toString(36).slice(2,6); cvSalvati.push({ id:cvId, salvato:ora, cv:copia }); }
+  if (!await scriviCVcifrati()) return false;
+  cvToccato = false; return true;
+}
+
+function renderSalvati(){
+  if (!chiaveAperta()){ chiudiArea(); return renderPin(render, tornaLavoro); }
+  if (!cvSalvati) return apriCVsalvati().then(() => { if (vista.lavoro==="salvati") renderSalvati(); });
+  ultimoUso = Date.now();
+  const lista = [...cvSalvati].sort((a,b) => b.salvato - a.salvato);
+  const quando = t => new Date(t).toLocaleDateString("it-IT", { day:"numeric", month:"long", year:"numeric" });
+  app.innerHTML = `<button class="back" id="indietro">‹ Indietro</button>
+    <div class="stack"><span class="eyebrow">Lavoro · area protetta</span><h1>CV salvati</h1>
+      <p class="muted">Cifrati con il tuo PIN e salvati solo su questo telefono.</p></div>
+    ${cvToccato?`<div class="callout">Hai un CV aperto con modifiche non salvate. Se ne apri un altro, le perdi.</div>`:""}
+    <div class="stack">${lista.length ? lista.map(x => `<div class="card">
+        <div class="row"><h3>${esc([x.cv.nome, x.cv.cognome].join(" ").trim() || "Senza nome")}</h3>${x.id===cvId?'<span class="tag ok">Aperto</span>':""}</div>
+        ${x.cv.obiettivo?`<p class="muted">${esc(x.cv.obiettivo)}</p>`:""}
+        <p class="note">Salvato il ${quando(x.salvato)} · si cancella il ${quando(x.salvato + GIORNI_CV*24*3600*1000)} se non lo modifichi</p>
+        <div class="row" style="justify-content:flex-start"><button class="btn piccolo" data-apri="${x.id}">Apri</button><button class="back" data-elimina="${x.id}">Elimina</button></div>
+      </div>`).join("") : `<div class="card"><p class="muted">Nessun CV salvato. Crea un CV e premi «Salva cifrato sul telefono».</p></div>`}</div>
+    <button class="btn ghost" id="nuovo-cv">+ Nuovo CV</button>
+    <p class="note">Un CV non modificato da ${GIORNI_CV} giorni si cancella da solo. Dopo ${MAX_TENTATIVI} PIN sbagliati si cancellano passaggi e CV. Se cambi telefono o cancelli i dati del browser, i CV salvati vanno persi: conserva il PDF dove serve.</p>
+    <button class="back" id="blocca">Chiudi l'area protetta</button>`;
+  document.getElementById("indietro").onclick = tornaLavoro;
+  document.getElementById("blocca").onclick = () => { chiudiArea(); tornaLavoro(); };
+  const conferma = (b, testo) => { if (!cvToccato || b.dataset.conferma==="1") return true; b.dataset.conferma = "1"; b.textContent = testo; return false; };
+  const n = document.getElementById("nuovo-cv");
+  n.onclick = () => { if (!conferma(n, "Perdi le modifiche non salvate? Tocca ancora")) return; cancellaCV(); vai({tab:"lavoro", lavoro:"cv"}); };
+  app.querySelectorAll("[data-apri]").forEach(b => b.onclick = () => {
+    if (b.dataset.apri !== cvId && !conferma(b, "Perdi le modifiche? Tocca ancora")) return;
+    const x = cvSalvati.find(v => v.id === b.dataset.apri); if (!x) return;
+    if (x.id !== cvId){ cv = Object.assign(cvVuoto(), JSON.parse(JSON.stringify(x.cv))); cvId = x.id; cvToccato = false; }
+    vai({tab:"lavoro", lavoro:"cv"});
+  });
+  app.querySelectorAll("[data-elimina]").forEach(b => b.onclick = async () => {
+    if (b.dataset.ok !== "1"){ b.dataset.ok = "1"; b.textContent = "Conferma eliminazione"; return; }
+    cvSalvati = cvSalvati.filter(v => v.id !== b.dataset.elimina);
+    if (b.dataset.elimina === cvId) cancellaCV();
+    await scriviCVcifrati(); avviso("CV eliminato"); renderSalvati();
+  });
+}
+
 function renderLavoro(){
   app.innerHTML = `<div class="stack"><span class="eyebrow">Per chi cerca lavoro</span><h1>Lavoro</h1>
       <p class="muted">Prepara insieme alla persona un CV semplice e trova gli annunci giusti nella sua zona.</p></div>
     <button class="card mod" id="vai-cv"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h7"/></svg></span>
-      <div><h3>Crea un CV</h3><p class="muted">Pochi campi e frasi pronte per i lavori più comuni. Si salva in PDF, da stampare o inviare.</p>${cvToccato?'<span class="tag ok" style="justify-self:start">CV in corso</span>':""}</div></button>
+      <div><h3>Crea un CV</h3><p class="muted">Pochi campi e frasi pronte per i lavori più comuni. Si salva in PDF, da stampare o inviare.</p>${cvInMemoria()?'<span class="tag ok" style="justify-self:start">CV aperto</span>':""}</div></button>
+    <button class="card mod" id="vai-salvati"><span class="ico"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
+      <div><h3>CV salvati</h3><p class="muted">${(n => n ? `${n===1?"1 CV salvato, cifrato":`${n} CV salvati, cifrati`} con il PIN dell'area operatore` : "Salva un CV per riprenderlo un altro giorno. Serve il PIN dell'area operatore.")(leggi(CHIAVE_CV_N, 0))}</p></div></button>
     <button class="card mod" id="vai-cerca"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg></span>
       <div><h3>Cerca annunci</h3><p class="muted">Le parole di ricerca giuste e i link già pronti per Indeed, LinkedIn, InfoJobs, le agenzie e i portali pubblici.</p></div></button>
     <section class="card"><h3>Prima di iniziare</h3><ol class="passi">
@@ -854,7 +929,8 @@ function renderLavoro(){
       <li>Il CV non dice che la persona è seguita dalla Caritas: è un CV come tutti gli altri.</li>
       <li>Contano anche i lavori senza contratto, quelli fatti all'estero e il volontariato.</li>
     </ol></section>
-    <p class="note">I dati del CV restano solo in questa pagina: non vengono salvati sul telefono né inviati a nessuno.</p>`;
+    <p class="note">Un CV non salvato resta solo in questa pagina. Quelli salvati sono cifrati con il tuo PIN e restano solo su questo telefono: non vengono mai inviati a nessuno.</p>`;
+  document.getElementById("vai-salvati").onclick = () => vai({tab:"lavoro", lavoro:"salvati"});
   document.getElementById("vai-cv").onclick = () => vai({tab:"lavoro", lavoro:"cv"});
   document.getElementById("vai-cerca").onclick = () => vai({tab:"lavoro", lavoro:"cerca"});
 }
@@ -915,12 +991,15 @@ function renderCV(){
         ${areaTesto("Altro (facoltativo)","altro",cv.altro,'maxlength="300" placeholder="Es. Uso del computer di base, piccoli lavori di elettricità"')}
       </section>
       <button class="btn" type="submit">Vedi il CV e salva il PDF</button>
+      <button class="btn ghost" type="button" id="salva-cv">Salva cifrato sul telefono</button>
+      <p class="note" id="stato-cv">${cvId ? (cvToccato ? "Ci sono modifiche non salvate." : "Salvato e cifrato su questo telefono.") : "Non ancora salvato."}</p>
     </form>
-    <div class="row"><button class="back" id="vai-cerca">Cerca annunci per questo lavoro ›</button><button class="back" id="cancella-cv">Cancella i dati</button></div>
-    <p class="note">Il CV resta solo in questa pagina: non viene salvato sul telefono né inviato a nessuno. Si cancella quando chiudi l'app, quando premi «Cancella i dati» o dopo 30 minuti in secondo piano.</p>`;
+    <div class="row"><button class="back" id="vai-cerca">Cerca annunci per questo lavoro ›</button><button class="back" id="cancella-cv">${cvId?"Chiudi questo CV":"Cancella i dati"}</button></div>
+    <p class="note">${cvId ? "La copia salvata è cifrata con il tuo PIN. «Chiudi questo CV» la toglie solo dalla pagina: resta tra i CV salvati." : "Finché non lo salvi, il CV resta solo in questa pagina e si cancella quando chiudi l'app, quando premi «Cancella i dati» o dopo 30 minuti in secondo piano."}</p>`;
 
   const f = document.getElementById("form-cv");
-  const aggiorna = () => { leggiForm(f, cv); cvToccato = true; };
+  const stato = document.getElementById("stato-cv");
+  const aggiorna = () => { leggiForm(f, cv); cvToccato = true; if (cvId) stato.textContent = "Ci sono modifiche non salvate."; };
   document.getElementById("indietro").onclick = tornaLavoro;
   f.oninput = e => {
     aggiorna();
@@ -947,12 +1026,22 @@ function renderCV(){
       b.dataset.conferma = ""; b.textContent = "Scrivi una proposta di presentazione"; avviso("Proposta scritta: correggila come serve");
     }
   };
-  f.onsubmit = e => { e.preventDefault(); aggiorna(); vai({tab:"lavoro", lavoro:"anteprima"}); };
-  document.getElementById("vai-cerca").onclick = () => { aggiorna(); ricerca.mansione = cv.obiettivo; vai({tab:"lavoro", lavoro:"cerca"}); };
+  f.onsubmit = e => { e.preventDefault(); leggiForm(f, cv); vai({tab:"lavoro", lavoro:"anteprima"}); };
+  document.getElementById("salva-cv").onclick = () => {
+    leggiForm(f, cv);
+    if (!cv.nome.trim()) return avviso("Scrivi almeno il nome prima di salvare");
+    const salva = async () => {
+      const ok = await salvaCVcifrato().catch(() => false);
+      renderCV(); avviso(ok ? "CV salvato e cifrato" : "Non riesco a salvare: controlla che il browser non sia in navigazione privata.");
+    };
+    if (chiaveAperta()) return salva();
+    chiudiArea(); renderPin(salva, renderCV); scrollTo(0,0);
+  };
+  document.getElementById("vai-cerca").onclick = () => { leggiForm(f, cv); ricerca.mansione = cv.obiettivo; vai({tab:"lavoro", lavoro:"cerca"}); };
   const c = document.getElementById("cancella-cv");
   c.onclick = () => {
     if (c.dataset.conferma!=="1"){ c.dataset.conferma = "1"; c.textContent = "Conferma: cancella tutto"; return; }
-    cancellaCV(); avviso("Dati del CV cancellati"); renderCV(); scrollTo(0,0);
+    const salvato = !!cvId; cancellaCV(); avviso(salvato ? "CV chiuso: la copia salvata resta" : "Dati del CV cancellati"); renderCV(); scrollTo(0,0);
   };
 }
 
