@@ -798,9 +798,9 @@ const MANSIONI = [
     attivita:["Carico e scarico merci","Preparazione degli ordini (picking) e imballaggio","Controllo della merce in entrata e in uscita","Uso del transpallet","Uso del carrello elevatore (muletto)"] },
   { nome:"Operaio/a di produzione", cerca:["operaio generico","addetto produzione","operaio produzione","operatore di produzione","addetto linea"],
     attivita:["Lavoro su linea di produzione","Montaggio e confezionamento","Controllo qualità dei pezzi","Lavoro su turni","Rispetto delle norme di sicurezza"] },
-  { nome:"Operaio/a agricolo", cerca:["operaio agricolo","bracciante agricolo","addetto raccolta","lavoro agricolo"],
+  { nome:"Operaio/a agricolo", cerca:["operaio agricolo","bracciante agricolo","addetto raccolta","vendemmia","lavoro agricolo"],
     attivita:["Raccolta di frutta e ortaggi","Lavori in risaia e nei campi","Potatura e cura delle piante","Uso di piccoli attrezzi agricoli","Cura degli animali"] },
-  { nome:"Muratore / manovale edile", cerca:["manovale","muratore","operaio edile","aiuto muratore"],
+  { nome:"Muratore / manovale edile", cerca:["manovale","muratore","operaio edile","aiuto muratore","piastrellista"],
     attivita:["Preparazione di malta e calcestruzzo","Aiuto nella costruzione di muri e tramezzi","Demolizioni e pulizia del cantiere","Intonaci, imbiancature e piccole ristrutturazioni","Montaggio di ponteggi"] },
   { nome:"Aiuto cuoco / lavapiatti", cerca:["aiuto cuoco","lavapiatti","addetto cucina","commis di cucina"],
     attivita:["Preparazione degli ingredienti","Lavaggio di stoviglie e attrezzature","Pulizia e riordino della cucina","Rispetto delle norme igieniche (HACCP)"] },
@@ -814,6 +814,46 @@ const MANSIONI = [
     attivita:["Taglio dell'erba e potatura di siepi","Cura di giardini e aree verdi","Piccole riparazioni e manutenzioni","Uso di decespugliatore e tosaerba"] },
   { nome:"OSS / ASA", cerca:["OSS","operatore socio sanitario","ASA","ausiliario socio assistenziale"],
     attivita:["Assistenza di base agli ospiti di RSA o strutture","Igiene e cura della persona","Aiuto nell'alimentazione e negli spostamenti","Collaborazione con infermieri ed educatori"] },
+  { nome:"Cuoco/a", cerca:["cuoco","cuoca","capo partita","cuoco ristorante"],
+    attivita:["Preparazione di primi, secondi e contorni","Organizzazione della linea durante il servizio","Gestione delle scorte e delle scadenze","Rispetto delle norme igieniche (HACCP)"] },
+  { nome:"Pizzaiolo/a", cerca:["pizzaiolo","pizzaiola","aiuto pizzaiolo"],
+    attivita:["Preparazione dell'impasto e lievitazione","Stesura e farcitura delle pizze","Cottura in forno a legna o elettrico","Pulizia del banco e del forno"] },
+  { nome:"Addetto/a mensa", cerca:["addetto mensa","addetta mensa","ristorazione collettiva","scodellamento","addetto refezione"],
+    attivita:["Distribuzione dei pasti in mense scolastiche o aziendali","Preparazione e riordino dei tavoli","Lavaggio di stoviglie e pulizia dei locali","Rispetto delle norme igieniche (HACCP)"] },
+  { nome:"Cameriere/a ai piani (hotel)", cerca:["cameriera ai piani","cameriere ai piani","addetta camere","housekeeping"],
+    attivita:["Riassetto e pulizia delle camere","Cambio della biancheria","Pulizia dei bagni e degli spazi comuni","Controllo e rifornimento dei prodotti di cortesia"] },
+  { nome:"Babysitter", cerca:["babysitter","baby sitter","tata"],
+    attivita:["Cura di bambini durante il giorno","Accompagnamento a scuola e alle attività","Preparazione dei pasti per i bambini","Giochi e aiuto nei compiti"] },
+  { nome:"Addetto/a lavanderia", cerca:["addetto lavanderia","addetta lavanderia","stiratrice","lavanderia industriale"],
+    attivita:["Lavaggio e asciugatura dei capi","Stiratura a mano e con macchinari","Piegatura e confezionamento","Smistamento della biancheria"] },
+  { nome:"Sarto/a", cerca:["sarta","sarto","addetta cucito","confezionista","operaia tessile"],
+    attivita:["Riparazioni e modifiche di abiti","Cucito a mano e a macchina","Taglio dei tessuti su modello","Uso di macchine da cucire industriali"] },
+  { nome:"Facchino / addetto traslochi", cerca:["facchino","traslochi","addetto traslochi","addetto carico scarico"],
+    attivita:["Carico e scarico di mobili e merci","Smontaggio e montaggio di mobili","Imballaggio e protezione degli oggetti","Trasporto su furgone e consegna"] },
+  { nome:"Fattorino / rider", cerca:["fattorino","rider","addetto consegne","pony express"],
+    attivita:["Consegne a domicilio in bicicletta, scooter o auto","Ritiro degli ordini nei locali","Uso delle app per le consegne","Puntualità nei tempi di consegna"] },
+  { nome:"Operatore/operatrice ecologico", cerca:["operatore ecologico","raccolta rifiuti","igiene ambientale","spazzamento"],
+    attivita:["Raccolta differenziata porta a porta","Spazzamento di strade e aree pubbliche","Svuotamento dei cassonetti","Lavoro su turni anche di primo mattino"] },
+  { nome:"Addetto/a industria alimentare", cerca:["operaio alimentare","addetto confezionamento alimentare","addetto macelleria","addetto lavorazione carni","operaio caseificio"],
+    attivita:["Lavorazione e confezionamento di alimenti","Etichettatura e pesatura dei prodotti","Pulizia delle macchine e dei reparti","Lavoro in celle frigorifere","Rispetto delle norme igieniche (HACCP)"] },
+  { nome:"Saldatore / carpentiere metallico", cerca:["saldatore","carpentiere metallico","saldatura","operaio metalmeccanico"],
+    attivita:["Saldatura a filo (MIG/MAG) e ad elettrodo","Lettura di semplici disegni tecnici","Taglio e molatura di pezzi in metallo","Montaggio di strutture metalliche"] },
+  { nome:"Elettricista", cerca:["elettricista","aiuto elettricista","impiantista elettrico"],
+    attivita:["Posa di cavi e canaline","Montaggio di prese, interruttori e quadri","Impianti elettrici civili","Ricerca guasti e piccole riparazioni"] },
+  { nome:"Idraulico", cerca:["idraulico","termoidraulico","aiuto idraulico"],
+    attivita:["Installazione di sanitari e rubinetteria","Riparazione di perdite e scarichi","Posa di tubazioni","Manutenzione di caldaie e impianti di riscaldamento"] },
+  { nome:"Imbianchino / cartongessista", cerca:["imbianchino","pittore edile","cartongessista","decoratore"],
+    attivita:["Preparazione delle superfici: stuccatura e carteggiatura","Tinteggiatura di interni ed esterni","Montaggio di pareti e controsoffitti in cartongesso","Protezione di pavimenti e arredi"] },
+  { nome:"Falegname", cerca:["falegname","aiuto falegname","addetto falegnameria","montatore mobili"],
+    attivita:["Taglio e lavorazione del legno","Montaggio di mobili e serramenti","Uso di seghe, pialle e trapani","Verniciatura e rifinitura"] },
+  { nome:"Meccanico / gommista", cerca:["meccanico","gommista","aiuto meccanico","meccanico auto"],
+    attivita:["Tagliando e cambio dell'olio","Sostituzione di freni, filtri e batterie","Cambio e equilibratura degli pneumatici","Piccole riparazioni su auto e furgoni"] },
+  { nome:"Custode / portiere", cerca:["custode","portiere","portinaio","addetto portineria","portierato"],
+    attivita:["Accoglienza e controllo degli accessi","Ricevimento della posta e dei pacchi","Piccola manutenzione e pulizia degli spazi comuni","Apertura e chiusura dello stabile"] },
+  { nome:"Steward / addetto/a alla sicurezza", cerca:["steward","addetto alla sicurezza","vigilanza non armata","addetto controllo accessi"],
+    attivita:["Controllo degli accessi a eventi, negozi o aziende","Indicazioni e assistenza al pubblico","Gestione delle code e dei flussi di persone","Segnalazione di situazioni di rischio"] },
+  { nome:"Benzinaio / addetto autolavaggio", cerca:["benzinaio","addetto distributore carburante","addetto autolavaggio","addetto stazione di servizio"],
+    attivita:["Rifornimento di carburante","Lavaggio di auto a mano e con impianti","Incasso e uso della cassa","Pulizia dell'area di servizio"] },
 ];
 const LIVELLI = ["Madrelingua","Ottimo","Buono","Base"];
 const PATENTI = ["B","C","CE","D","CQC","AM / A"];
@@ -859,15 +899,18 @@ const campo = (et, nome, val, extra="", nota="") => `<label class="campo">${et}<
 const areaTesto = (et, nome, val, extra="", nota="") => `<label class="campo">${et}<textarea name="${nome}" rows="3" ${extra}>${esc(val||"")}</textarea>${nota?`<small>${nota}</small>`:""}</label>`;
 const scelte = (leg, lista, opzioni, sel) => `<fieldset class="chips" data-lista="${lista}"><legend>${leg}</legend>${opzioni.map(o=>`<label><input type="checkbox" value="${esc(o)}" ${sel.includes(o)?"checked":""}><span>${esc(o)}</span></label>`).join("")}</fieldset>`;
 const togliBtn = (lista, i) => `<button class="back togli" type="button" data-togli="${lista}.${i}">Togli</button>`;
-const listaMansioni = () => `<datalist id="mansioni">${MANSIONI.map(m=>`<option value="${esc(m.nome)}">`).join("")}</datalist>`;
+const listaMansioni = () => `<datalist id="mansioni">${[...MANSIONI].sort((a,b) => a.nome.localeCompare(b.nome, "it")).map(m=>`<option value="${esc(m.nome)}">`).join("")}</datalist>`;
 const elenco = a => a.length < 2 ? a.join("") : a.slice(0,-1).join(", ") + " e " + a[a.length-1];
 const tornaLavoro = () => (history.state && history.state.lavoro) ? history.back() : vai({tab:"lavoro"});
 
 function trovaMansione(testo){
   const t = (testo||"").trim().toLowerCase(); if (t.length < 3) return null;
   const parole = t.split(/[^a-zà-ù]+/);
-  return MANSIONI.find(m => m.nome.toLowerCase()===t) ||
-    MANSIONI.find(m => m.cerca.some(c => { c = c.toLowerCase(); return c.length > 4 ? t.includes(c) : parole.includes(c); }));
+  const esatta = MANSIONI.find(m => m.nome.toLowerCase()===t); if (esatta) return esatta;
+  let meglio = null, lung = 0;   // con più mansioni simili vince il termine più lungo (es. «cameriera ai piani» prima di «cameriera»)
+  MANSIONI.forEach(m => m.cerca.forEach(c => { c = c.toLowerCase();
+    if ((c.length > 4 ? t.includes(c) : parole.includes(c)) && c.length > lung){ meglio = m; lung = c.length; } }));
+  return meglio;
 }
 
 // CV salvati: un unico blocco cifrato (AES-GCM) con la chiave dei passaggi, quindi con lo stesso PIN.
